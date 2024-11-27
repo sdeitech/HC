@@ -1,0 +1,44 @@
+<h2 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    Live chat
+</h2>
+<mat-dialog-content>
+    <ng-container *ngFor="let item of messages">
+        <div class="row mb-1">
+            <div class="col-ms-12" [ngClass]="{'text-right': (userId === item.fromUserId) }">
+                <span>
+                    <strong [innerText]="item.fromUserName"></strong>
+                </span>
+                <span class="ms-1" [innerText]="item.messageDate"></span>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-ms-12" [ngClass]="{'text-right': (userId === item.fromUserId) }">
+                <span [innerText]="item.roomMessage"></span>
+            </div>
+        </div>
+    </ng-container>
+
+    <div class="row">
+        <div class="col-ms-12">
+            <div class="row">
+                <div class="col-ms-12">
+                    <textarea class="w-100" [disabled]="isLoadingMessages || isPostingMessages"
+                        [(ngModel)]="message"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-ms-12">
+                    <button type="button" [disabled]="isLoadingMessages || isPostingMessages || !isValidToPost"
+                        mat-flat-button color="primary" (click)="onPostMessage()">
+                        Post
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button type="button" mat-flat-button color="warn" (click)="onClose()">
+        Close
+    </button>
+</mat-dialog-actions>

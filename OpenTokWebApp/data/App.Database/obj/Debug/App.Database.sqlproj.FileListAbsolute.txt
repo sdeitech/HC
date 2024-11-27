@@ -1,0 +1,10 @@
+D:\components\OpenTok-Components\OpenTokWebApp\data\App.Database\bin\Debug\App.Database.dacpac
+D:\components\OpenTok-Components\OpenTokWebApp\data\App.Database\bin\Debug\App.Database.dll
+D:\components\OpenTok-Components\OpenTokWebApp\data\App.Database\bin\Debug\App.Database.pdb
+D:\components\OpenTok-Components\OpenTokWebApp\data\App.Database\obj\Debug\App.Database.sqlproj.AssemblyReference.cache
+D:\components\OpenTok-Components\OpenTokWebApp\data\App.Database\obj\Debug\App.Database.dll
+D:\components\OpenTok-Components\OpenTokWebApp\data\App.Database\obj\Debug\App.Database.pdb
+D:\components\OpenTok-Components\OpenTokWebApp\data\App.Database\obj\Debug\Model.xml
+D:\components\OpenTok-Components\OpenTokWebApp\data\App.Database\obj\Debug\refactor.xml
+D:\components\OpenTok-Components\OpenTokWebApp\data\App.Database\obj\Debug\postdeploy.sql
+D:\components\OpenTok-Components\OpenTokWebApp\data\App.Database\obj\Debug\predeploy.sql

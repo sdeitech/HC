@@ -1,0 +1,28 @@
+﻿CREATE TABLE [cms].[ChatRoomMessage] (
+    [MessageId]             INT            IDENTITY (1, 1) NOT NULL,
+    [RoomId]                INT            NOT NULL,
+    [FromUserId]            INT            NOT NULL,
+    [RoomMessage]           NVARCHAR (MAX) NOT NULL,
+    [OrganizationId]        INT            NULL,
+    [IsMessage]             BIT            NULL,
+    [IsRecording]           BIT            NULL,
+    [IsFile]                BIT            NULL,
+    [FileName]              NVARCHAR (MAX) NULL,
+    [FileType]              NVARCHAR (MAX) NULL,
+    [MessageDate]           DATETIME2 (7)  NOT NULL,
+    [CreatedBy]             INT            NOT NULL,
+    [CreatedOn]             DATETIME2 (7)  NOT NULL,
+    [CreatedIpAddress]      NVARCHAR (MAX) NULL,
+    [LastModifiedBy]        INT            NULL,
+    [LastModifiedOn]        DATETIME2 (7)  NULL,
+    [LastModifiedIpAddress] NVARCHAR (MAX) NULL,
+    [IsActive]              BIT            NOT NULL,
+    [IsDeleted]             BIT            NOT NULL,
+    [DeletedBy]             INT            NULL,
+    [DeletedOn]             DATETIME2 (7)  NULL,
+    [DeletedIpAddress]      NVARCHAR (MAX) NULL,
+    [Guid]                  NVARCHAR (100) NULL,
+    CONSTRAINT [PK_ChatRoomMessage] PRIMARY KEY CLUSTERED ([MessageId] ASC),
+    CONSTRAINT [FK_ChatRoomMessage_ChatRoom_RoomId] FOREIGN KEY ([RoomId]) REFERENCES [cms].[ChatRoom] ([ChatRoomId])
+);
+

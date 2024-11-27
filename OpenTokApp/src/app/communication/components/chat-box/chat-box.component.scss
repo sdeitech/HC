@@ -1,0 +1,17 @@
+mat-dialog-container {
+    resize: both;
+    overflow: auto;
+}
+
+[mat-dialog-title] {
+    cursor: move;
+    background-color: #eee;
+}
+
+mat-dialog-content {
+    background-color: #eee;
+}
+
+mat-dialog-actions {
+    background-color: #eee;
+}

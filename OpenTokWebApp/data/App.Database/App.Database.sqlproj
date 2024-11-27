@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>App.Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{f28d00e7-7e80-4e0e-b156-54d481da7a55}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>App.Database</RootNamespace>
+    <AssemblyName>App.Database</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Functions\" />
+    <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="pat\" />
+    <Folder Include="pat\Tables\" />
+    <Folder Include="cms\" />
+    <Folder Include="cms\Tables\" />
+    <Folder Include="Security\" />
+    <Folder Include="org\" />
+    <Folder Include="org\Tables\" />
+    <Folder Include="mst\" />
+    <Folder Include="mst\Tables\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Functions\udf_EncryptText.sql" />
+    <Build Include="dbo\Functions\udf_DecryptText.sql" />
+    <Build Include="dbo\Stored Procedures\usr_GetUserDetails.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsSaveGroupSessionTokens.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsSaveGroupSessions.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsSaveGroupSessionRecordings.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsSaveGroupSessionInvitations.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsSaveChatRoomMessage.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsSaveChatConnectedUser.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsGetUsersForInvitation.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsGetSessionDetailsByInvitationId.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsGetConnectedUsersForAppointment.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsGetChatRoomMessages.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsGetChatConnectedUserList.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsGetChatConnectedUserByUserId.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsGetChatConnectedUserById.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsGetAppointmentAndSessionDetails.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsGetAllActiveUserConnections.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsGetActiveUserConnections.sql" />
+    <Build Include="dbo\Stored Procedures\usp_cmsCreateMissingClientUserForAppointment.sql" />
+    <Build Include="pat\Tables\ClientAppointments.sql" />
+    <Build Include="cms\Tables\ChatRoomMessage.sql" />
+    <Build Include="cms\Tables\ChatRoomUser.sql" />
+    <Build Include="cms\Tables\ChatRoom.sql" />
+    <Build Include="Security\pat.sql" />
+    <Build Include="Security\cms.sql" />
+    <Build Include="cms\Tables\GroupSessionInvitations.sql" />
+    <Build Include="cms\Tables\ChatConnectedUser.sql" />
+    <Build Include="cms\Tables\GroupSessionTokens.sql" />
+    <Build Include="cms\Tables\GroupSessions.sql" />
+    <Build Include="cms\Tables\GroupSessionRecordings.sql" />
+    <Build Include="org\Tables\User.sql" />
+    <Build Include="Security\org.sql" />
+    <Build Include="org\Tables\Roles.sql" />
+    <Build Include="pat\Tables\ClientInfo.sql" />
+    <Build Include="pat\Tables\ClientContactInfo.sql" />
+    <Build Include="org\Tables\OrgMemberInfo.sql" />
+    <Build Include="dbo\Functions\udf_DateTimeWithTimezone.sql" />
+    <Build Include="mst\Tables\MasterTimeZone.sql" />
+    <Build Include="dbo\Functions\udf_IsDayLightSavingTime.sql" />
+    <Build Include="Security\mst.sql" />
+    <Build Include="org\Tables\OrgMemberContactInfo.sql" />
+  </ItemGroup>
+</Project>

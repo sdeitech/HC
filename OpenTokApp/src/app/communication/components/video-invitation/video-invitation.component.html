@@ -1,0 +1,66 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="video-panel">
+            <div #subscriberPanel class="subscriber-panel"></div>
+            <div #publisherPanel class="publisher-panel"></div>
+            <div #screenSharingPublisherPanel class="screen-publisher-panel"></div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <button mat-mini-fab [matTooltip]="'End call'" aria-label="End call" (click)="onEndCall()">
+            <mat-icon color="warn">call_end</mat-icon>
+        </button>
+        <button *ngIf="userId > 0 && isSubscriberJoined" mat-mini-fab [disabled]="!!chatBoxRef"
+            [matTooltip]="'Start chat'" aria-label="Start chat" (click)="onStartChat()">
+            <mat-icon color="primary">chat</mat-icon>
+        </button>
+        <button *ngIf="!isRecoringInProgress && isSubscriberJoined" [disabled]="isRecordingAPIRequestInProgress"
+            mat-mini-fab [matTooltip]="'Start call recording'" aria-label="Start call recording"
+            (click)="onStartCallRecording()">
+            <mat-icon *ngIf="!isRecordingAPIRequestInProgress" color="primary">voicemail</mat-icon>
+            <mat-spinner *ngIf="isRecordingAPIRequestInProgress"
+                [style]="{ width: '20px', height: '20px' }"></mat-spinner>
+        </button>
+        <button [disabled]="isRecordingAPIRequestInProgress" *ngIf="isRecoringInProgress && isSubscriberJoined"
+            mat-mini-fab [matTooltip]="'Stop call recording'" aria-label="Stop call recording"
+            (click)="onStopCallRecording()">
+            <mat-icon *ngIf="!isRecordingAPIRequestInProgress" color="warn">fiber_manual_record</mat-icon>
+            <mat-spinner *ngIf="isRecordingAPIRequestInProgress"
+                [style]="{ width: '20px', height: '20px' }"></mat-spinner>
+        </button>
+        <!--
+        <button mat-mini-fab [matTooltip]="'Invite user to join the call'" aria-label="Invite user to join the call"
+            (click)="onInviteUser()">
+            <mat-icon color="primary">add_ic_call</mat-icon>
+        </button>
+        -->
+        <button *ngIf="!isPublisherVideo" mat-mini-fab [matTooltip]="'Start call video'" aria-label="Start call video"
+            (click)="onToggleVideo()">
+            <mat-icon color="primary">videocam</mat-icon>
+        </button>
+        <button *ngIf="isPublisherVideo" mat-mini-fab [matTooltip]="'Stop call video'" aria-label="Stop call video"
+            (click)="onToggleVideo()">
+            <mat-icon color="warn">videocam_off</mat-icon>
+        </button>
+        <button mat-mini-fab *ngIf="hasScreenSharingCapability && hasScreenSharingStopped"
+            [matTooltip]="'Start screen sharing'" aria-label="Start screen sharing" (click)="onStartScreenSharing()">
+            <mat-icon color="primary">screen_share</mat-icon>
+        </button>
+        <button mat-mini-fab *ngIf="hasScreenSharingCapability && !hasScreenSharingStopped"
+            [matTooltip]="'Stop screen sharing'" aria-label="Stop screen sharing" (click)="onStopScreenSharing()">
+            <mat-icon color="warn">stop_screen_share</mat-icon>
+        </button>
+        <!--
+        <button mat-mini-fab *ngIf="!isFullScreen" [matTooltip]="'Start full screen'" aria-label="Start full screen"
+            (click)="onBeginFullScreen()">
+            <mat-icon color="primary">fullscreen</mat-icon>
+        </button>
+        <button mat-mini-fab *ngIf="isFullScreen" [matTooltip]="'Exit full screen'" aria-label="Exit full screen"
+            (click)="onExitFullScreen()">
+            <mat-icon color="primary">close_fullscreen</mat-icon>
+        </button>
+        -->
+    </div>
+</div>

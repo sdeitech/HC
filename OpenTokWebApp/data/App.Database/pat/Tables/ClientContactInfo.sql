@@ -1,0 +1,28 @@
+﻿CREATE TABLE [pat].[ClientContactInfo] (
+    [ClientContactInfoId]    INT            IDENTITY (1, 1) NOT NULL,
+    [ClientId]               INT            NOT NULL,
+    [ContactTypeId]          INT            NULL,
+    [Phone]                  NVARCHAR (MAX) NOT NULL,
+    [PreferenceId]           INT            NULL,
+    [PrimaryEmail]           NVARCHAR (MAX) NOT NULL,
+    [SecondaryEmail]         NVARCHAR (MAX) NOT NULL,
+    [AppointmentRemindersId] NVARCHAR (MAX) NULL,
+    [CreatedBy]              INT            CONSTRAINT [df_org_ClientContactInfo_CreatedBy] DEFAULT ((0)) NOT NULL,
+    [CreatedOn]              DATETIME2 (7)  CONSTRAINT [df_org_ClientContactInfo_CreatedOn] DEFAULT (getutcdate()) NOT NULL,
+    [CreatedIpAddress]       NVARCHAR (MAX) NULL,
+    [LastModifiedBy]         INT            NULL,
+    [LastModifiedOn]         DATETIME2 (7)  NULL,
+    [LastModifiedIpAddress]  NVARCHAR (MAX) NULL,
+    [IsActive]               BIT            CONSTRAINT [df_org_ClientContactInfo_IsActive] DEFAULT ((1)) NOT NULL,
+    [IsDeleted]              BIT            CONSTRAINT [df_org_ClientContactInfo_IsDeleted] DEFAULT ((0)) NOT NULL,
+    [DeletedBy]              INT            NULL,
+    [DeletedOn]              DATETIME2 (7)  NULL,
+    [DeletedIpAddress]       NVARCHAR (MAX) NULL,
+    [SecondaryPhone]         NVARCHAR (MAX) DEFAULT (N'') NOT NULL,
+    [SecondaryContactTypeId] INT            NULL,
+    [VersionId]              INT            NULL,
+    [Guid]                   NVARCHAR (100) NULL,
+    CONSTRAINT [PK_ClientContactInfo] PRIMARY KEY CLUSTERED ([ClientContactInfoId] ASC),
+    CONSTRAINT [FK_ClientContactInfo_ClientInfo_ClientId] FOREIGN KEY ([ClientId]) REFERENCES [pat].[ClientInfo] ([ClientId]) ON DELETE CASCADE
+);
+
