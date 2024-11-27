@@ -1,0 +1,1 @@
+export { ConfigurationFactory } from './configuration-factory';
