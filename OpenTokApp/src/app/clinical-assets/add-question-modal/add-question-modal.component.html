@@ -1,0 +1,36 @@
+<form [formGroup]="addQuestionForm" (ngSubmit)="onSubmit(addQuestionForm.value)" #form="ngForm" autocomplete="off"
+    novalidate>
+    <div class="modal-content">
+        <div class="modal-body">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Question</label>
+                        <input pInputText type="text" class="form-control" formControlName="question" maxlength="1000" minlength="3"/>
+                        <div *ngIf="addQuestionForm.get('question').hasError('required') && (addQuestionForm.get('question').touched || (form.invalid && form.submitted))"
+                        class="invalid-feedback d-block">
+                        Question is required
+                    </div>
+                    <span *ngIf="addQuestionForm.get('question').touched && addQuestionForm.get('question')['errors'] && addQuestionForm.get('question').hasError('minlength') 
+                    && !addQuestionForm.get('question').hasError('required')" class="invalid-feedback d-block">
+                    Minimum 3 characters required
+                </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit" >
+                <span *ngIf="!loading">
+                  Save
+                </span>
+          
+                <div class="text-light d-flex justify-content-center align-items-center" *ngIf="loading">
+                  <div class="spinner-border  text-light spinner-border-sm" role="status" aria-hidden="true"></div>
+                  <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+                </div>
+              </button>
+        </div>
+    </div>
+</form>

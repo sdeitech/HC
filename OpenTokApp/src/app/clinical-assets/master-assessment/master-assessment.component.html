@@ -1,0 +1,126 @@
+<p-tabView (onChange)="onSelectTab($event)" [activeIndex]="selectedIndex">
+    <p-tabPanel header="Encounter Form Sections" *ngIf="isClinicalSection">
+        <div class="container-fluid containerdiv" *ngIf="selectedIndex==0">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="flex-grow-1">
+                        <strong class="mb-0">Sections</strong>
+                        <p>Sections control how your assessments and data grids are presented to
+                            clinical users while conducting visits.</p>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <a class="btn btn-primary rounded-pill float-right" (click)="newProfileSectionModal(0)"><i
+                            class="fe fe-plus"></i> New Section</a> &nbsp;
+
+                    <button class="btn btn-primary rounded-pill float-right mr-2" [disabled]="loading"
+                        (click)="saveOrder()">
+                        <span *ngIf="!loading"> Save Order </span>
+
+                        <div class="text-light d-flex justify-content-center align-items-center" *ngIf="loading">
+                            <div class="spinner-border text-light spinner-border-sm" aria-hidden="true"></div>
+                            <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="flex-grow-1">
+                        <p-dropdown placeholder="Select Project" [options]="allProjectList" [filter]="true"
+                            [(ngModel)]="selectedProjectId" optionValue="id" optionLabel="name"
+                            class="w-100 primeng-form-control" (onChange)="filterByProject()" appendTo="body">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <p-checkbox class="mb-1" inputId="binary" [binary]="true" [(ngModel)]="isRemoveDisabled"
+                        (click)="onRemove()">
+                    </p-checkbox><label class="ml-1 mb-0"> Remove disabled sections</label>
+                </div>
+            </div>
+            <div class="row" *ngIf="loaderStatus">
+                <div class="col-12 text-center">
+                    <p-progressSpinner [style]="{ width: '50px', height: '50px' }" strokeWidth="4" fill="#EEEEEE">
+                    </p-progressSpinner>
+                </div>
+            </div>
+            <div class="list-group mb-5 shadow mt-3">
+                <div class="list-group-item">
+                    <ngx-sortable [items]="sectionsData" (listSorted)="listSorted($event)" [listStyle]="listStyle"
+                        id="sectionid">
+                        <ng-template let-item styleClass="p-datatable-striped">
+                            <div class="row align-items-center ">
+                                <div class="col-lg-10 col-md-10 col-sm-9 section-height ml-2">
+                                    <strong class="mb-0"><i class="fe fe-menu"></i> &nbsp;
+                                        {{item.name}}</strong>&nbsp;<span *ngIf="item.active == true && item.require_section == true"
+                                        class="dot dot-lg bg-success"></span>
+                                    <span *ngIf="item.active == false && item.require_section == true" class="dot dot-lg bg-danger"></span>
+                                    <span
+                                        *ngIf="item.require_section == false"
+                                        class="dot dot-lg bg-secondary"></span>
+                                    &nbsp;
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-sm-2 text-right custom ">
+                                    <a (click)="editSection(item)">Edit</a>&nbsp;&nbsp;
+                                    <a (click)="deleteSection(item)">Delete</a>
+                                </div>
+                                <div>
+                                    <div class="col-12 project-height">
+                                        <span *ngFor="let appointmenttype of appointmenttypeAssociatedWithSections">
+                                            <span *ngIf="(appointmenttype.section_id == item.id)">
+                                                <div class="badge badge-secondary">
+                                                    <span>{{appointmenttype.name}}</span>
+                                                </div>&nbsp;
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-12 project-height">
+                                        <span *ngFor="let project of this.getProjectList(item.id) ; index as i">
+                                            <span *ngIf="(project.section_id == item.id) && i< 5">
+                                                <div class="badge badge-secondary">
+                                                    <span>{{project.name}}</span>
+                                                </div>&nbsp;
+                                            </span>
+                                            <span [escape]="false" *ngIf="i==5" [pTooltip]="this.showList(item.id)"
+                                                tooltipStyleClass="pTooltip-style">
+                                                +{{this.getProjectList(item.id).length-5 }} more
+                                            </span>
+                                        </span>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+
+                    </ngx-sortable>
+
+                </div>
+
+            </div>
+        </div>
+    </p-tabPanel>
+    <p-tabPanel header="Clinical Assessments" *ngIf="isClinicalAssessment">
+        <clinical-assessment></clinical-assessment>
+    </p-tabPanel>
+    <p-tabPanel header="Dynamic Datagrids" *ngIf="isClinicalDynDatagrid">
+        <dynamic-data-grids></dynamic-data-grids>
+    </p-tabPanel>
+    <p-tabPanel header="Legacy Datagrids" *ngIf="isClinicalDatagrid">
+        <data-grid></data-grid>
+    </p-tabPanel>
+    <p-tabPanel header="Coding Guidelines" *ngIf="isClinicalCoding">
+        <coding-guidline></coding-guidline>
+
+    </p-tabPanel>
+    <p-tabPanel header="Care Plan Templates" *ngIf="isClinicalCareTemp">
+        <app-care-plan-templates></app-care-plan-templates>
+    </p-tabPanel>
+    <p-tabPanel header="Care Plan Assets" *ngIf="isClinicalCareAssets">
+        <app-care-plan-assets></app-care-plan-assets>
+    </p-tabPanel>
+
+</p-tabView>
+
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000"></p-confirmDialog>

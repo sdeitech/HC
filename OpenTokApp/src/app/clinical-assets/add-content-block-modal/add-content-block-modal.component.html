@@ -1,0 +1,32 @@
+<form [formGroup]="addContentForm" (ngSubmit)="onSubmit(addContentForm.value)" #form="ngForm" autocomplete="off"
+    novalidate>
+    <div class="modal-content">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Specify content:</label>
+                        <textarea autocomplete="false" placeholder="Add Content here" pInputText type="text"
+                            formControlName="content_block" maxlength="1000" minlength="3"
+                            class="form-control"></textarea>
+                        <span *ngIf="addContentForm.get('content_block').touched && addContentForm.get('content_block')['errors'] && addContentForm.get('content_block').hasError('minlength') 
+                    && !addContentForm.get('content_block').hasError('required')" class="invalid-feedback d-block">
+                            Minimum 3 characters required
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit">
+                <span *ngIf="!loading">
+                    Save
+                </span>
+                <div class="text-light d-flex justify-content-center align-items-center" *ngIf="loading">
+                    <div class="spinner-border  text-light spinner-border-sm" role="status" aria-hidden="true"></div>
+                    <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+                </div>
+            </button>
+        </div>
+    </div>
+</form>

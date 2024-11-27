@@ -1,0 +1,40 @@
+.section-height
+{
+    height: 50px;
+    margin-top: 12px;
+}
+
+.card-body {
+    background: #f8f9fa !important;
+    color: black !important;
+   
+}
+
+.dot {
+    height: 10px;
+    width: 10px;
+    background-color: rgb(248, 5, 5);
+    border-radius: 50%;
+  }
+@media only screen and(max-width:415px){
+    #savebutton{
+          margin-top: 20px;
+          margin-left: 18px;
+    }
+}
+.save-panal {
+
+    position: fixed;
+    bottom: 15px;
+    width: 215px;
+   right: 25px;
+    border: 3px solid #f1f1f1;
+    z-index: 9;
+  }
+  .button2:hover {
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  }
+  .p-border
+  {
+    border: 0 !important;
+  }

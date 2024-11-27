@@ -1,0 +1,118 @@
+table,
+th,
+td {
+  border: 2px solid #6c757d;
+  border-collapse: collapse;
+
+}
+
+th {
+  background-color: black;
+  color: white;
+}
+
+.table thead th {
+  color: white;
+}
+
+.header-text {
+  font-size: 18px;
+  color: black;
+}
+
+.save-panal {
+
+  position: fixed;
+  bottom: 15px;
+  width: 215px;
+  right: 25px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+
+.card-mb
+{
+ margin-bottom: 1rem !important;
+}
+
+.modal-footer-override {
+  margin: 0 !important;
+  padding-left: 0;
+  padding-right: 0;
+  justify-content: start;
+
+}
+
+.modal-footer-override a {
+  font-weight: 700;
+  color: #0073d7;
+  cursor: pointer;
+}
+
+.modal-footer-override button {
+  margin-left: 10px;
+  float: right;
+}
+
+.search-box {
+
+  width: 100%;
+  padding: 6px;
+}
+  
+.fe-link {
+  cursor: pointer;
+}
+
+.hand {
+  cursor: pointer;
+}
+
+.input-p {
+  padding: 8px;
+}
+
+.primeng-form-control.input-sm .p-dropdown .p-inputtext {
+  padding: 0px !important;
+}
+
+.panel-autocomplete {
+  padding: 0.3rem 0.3re
+}
+
+:host ::ng-deep .dropdown1 .p-dropdown {
+  padding: 1.8px
+}
+
+.inactiveLink {
+  pointer-events: none;
+  cursor: default;
+}
+
+.problem-square {
+  background-color: #A022FF !important;
+}
+
+.box-lable {
+  display: flex;
+  line-height: 0.7 !important;
+}
+
+.goal-square {
+  background-color: #58B4BF !important;
+}
+
+.intervention-square {
+  background-color: #3296ED !important;
+}
+
+.barrier-square {
+  background-color: #FF5733 !important;
+}
+
+.box {
+  height: 16px !important;
+  width: 16px !important;
+  margin-bottom: 15px !important;
+  border-radius: 3px !important;
+}

@@ -1,0 +1,35 @@
+<main>
+    <div>
+        <div class="d-flex mb-1">
+            <div class="flex-grow-1">
+                <strong class="mb-0">Assessments</strong>
+                <p>Build clinical assessments and scoring criteria which can be assigned to
+                    sections.</p>
+            </div>
+            <div class="ml-auto">
+                <a class="btn btn-primary rounded-pill" (click)="newAssessment(0)"><i class="fe fe-plus"></i> New
+                    Assessment</a>
+            </div>
+        </div>
+        <div class="container-fluid" *ngIf="loaderStatus">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p-progressSpinner [style]="{ width: '50px', height: '50px' }" strokeWidth="4" fill="#EEEEEE">
+                    </p-progressSpinner>
+                </div>
+            </div>
+        </div>
+        <div class="list-group mb-5 shadow mt-3" >
+        <div class="list-group-item" *ngFor="let item of assessmentList">
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <strong class="mb-0">{{item.name}}</strong>
+                </div>
+                <div class="col-4 text-right">
+                    <a (click)="updateAssessment(item)">Edit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</main>

@@ -1,0 +1,9 @@
+.btn-group-two{
+    .btn+.btn{margin-left: 10px;}
+}
+.care-plan-page-heading-left{display: flex; flex-wrap: wrap;
+    .care-plan-page-heading-form{margin-bottom: 10px;margin-right:15px;}
+}
+@media only screen and (max-width: 600px) {
+
+}

@@ -1,0 +1,38 @@
+<div class="modal-content">
+    <div class="modal-body">
+        <div class="row">
+            <div class="col">
+                <div class="d-flex mb-1 align-items-center">                            
+                    <div class="flex-grow-1" *ngIf="!isConfirmDelete">                
+                        <p>Are you sure you want to delete this field?</p>
+                    </div>
+                    <div class="flex-grow-1" *ngIf="isConfirmDelete">                
+                        <p>Data has already been stored to this field. Deleting the field can result in permanent data loss. If you wish to continue, please type "permanently delete" into the box below.</p>        
+                    </div>                    
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3" *ngIf="isConfirmDelete">
+            <div class="col">
+                <div class="ml-auto">
+                    <input pInputText type="text" class="form-control" placeholder="permanently delete" [(ngModel)]='confirmationText'>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="ml-auto">
+                    <button class="btn btn-primary" (click)="deleteField()" [disabled]="!enableDelete()">
+                        <span *ngIf="!loading">
+                            {{isConfirmDelete ? "Confirm Delete" : "Yes, Delete"}}
+                        </span>      
+                        <div class="text-light d-flex justify-content-center align-items-center" *ngIf="loading">
+                          <div class="spinner-border  text-light spinner-border-sm" role="status" aria-hidden="true"></div>
+                          <span class="text-white ml-2 pt-1 disabled">Deleting...</span>
+                        </div>
+                      </button>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

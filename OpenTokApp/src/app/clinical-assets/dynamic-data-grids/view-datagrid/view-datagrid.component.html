@@ -1,0 +1,268 @@
+<div>
+    <div class="d-flex mb-1 align-items-center">        
+            <div class="flex-grow-1" *ngIf="showGridDetails">
+                <strong class="mb-0">{{dynamicDataGridData.name}} <span class="badge badge-secondary">{{dynamicDataGridData.type_name}}</span></strong>
+                <p>{{dynamicDataGridData.description}}</p>
+            </div>        
+        <div class="ml-auto">
+            <a class="btn btn-primary rounded-pill" (click)="back()">Back to all datagrids</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <p-checkbox class="mb-1" [(ngModel)]="chkHealthProfile" inputId="binary" [binary]="true" [disabled]="true">
+			</p-checkbox ><label for='healthProfile' class="ml-1 mb-0">Show In Health Profile</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mt-3">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-4 mt-2"><span class="h6">Fields</span></div>
+                        <div class="col-md-8"><a class="btn btn-primary rounded-pill CreateField" (click)="newFieldModel(null)">Create New</a></div>
+                    </div>
+				</div>
+				<div class="list-group">
+					<div class="list-group-item">
+						<div class="row align-items-center">
+							<div class="col-12">
+								<input pInputText type="search" [(ngModel)]="searchText" placeholder="Search fields.." class="form-control" />
+							</div>
+						</div>
+					</div>
+				</div> 
+				<div class="card-body m-1 p-3" *ngIf="showDgFields">
+					<div class="card mt-1" *ngFor="let item of filterFields()">
+						<div class="card-body p-1">
+								<div class="row m-1">
+									<div class="col-md-6 ">
+                                        <p class="mb-0 fieldHeader"><span class="dot dot-lg " 
+											[ngClass]="{'bg-danger': item.status==false, 'bg-success': item.status==true }"></span> {{item.name}} {{item.is_required ? "(required)":""}}</p>
+										<span class="badge badge-secondary">{{item.field_type_name}}</span>										
+									</div>
+									<div class="col-md-6 fieldFontxSmall pr-1 padTop">
+										<p class="mb-0">Show in Tabular: {{item.show_in_tabular ? "Yes":"No"}} (order {{item.tabular_sort_order}})</p>
+										<p class="mb-0">Show in Detail: {{item.show_in_detail ? "Yes":"No"}} (order {{item.detail_sort_order}})</p>
+									</div>
+								</div>
+						</div>
+						<div class="card-footer p-0 fieldFooterBg">
+							<div class="row m-1 fieldFooterFont">
+								<div class="col-md-2 pt-1 footerEdit">
+									<a (click)="newFieldModel(item)">Edit</a>
+								</div>
+								<div class="col-md-2 p-1 footerEdit">
+									<a (click)="deleteField(item)">Delete</a>
+								</div>
+								<div class="col-md-3 p-1 footerSuspect" *ngIf="enableSuspect(item)">
+									<a (click)="suspectModal(item)">Suspect ({{item.field_suspects != null ? item.field_suspects.length : 0}})</a>
+								</div>
+								<div class="col-md-3 p-1 footerResponse">
+									<a (click)="responseModal(item)">Responses ({{item.response_count}})</a>
+								</div>
+                                <div class="col-md-3 p-1 footerCptGen" *ngIf="enableSuspect(item)">
+									<a (click)="cptGenModal(item)">CPT Gen ({{item.field_cpt != null ? item.field_cpt.length : 0}})</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>            
+            </div>
+        </div>  
+        <div class="col-md-8" *ngIf="showDgFields">
+            <div class="card mt-3" *ngIf="gridTypeId == 1"> 
+                <div class="card-header">
+                    <span class="h6">Preview Tabular</span>   
+                    <span style="float:right;">Drag and drop order of columns to change/set display order.</span>                 
+				</div>
+				<div class="card-body">
+                    <div class="row">
+                        <div class="col">                            
+                            <button class="btn btn-primary CreateField fieldFontxSmall ml-2 mb-1" disabled>Add New</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">                        
+                            <table class="table table-sm  table-bordered" *ngIf="filterTabularShowCount()">
+                                <thead>
+                                    <tr cdkDropList cdkDropListOrientation="horizontal"  (cdkDropListDropped)="dropdaragField($event)">
+                                        <th  cdkDrag class="badge-secondary fontColor fieldFontSize" 
+                                            *ngFor="let item of fillTabularPreData()" >
+                                            <strong><i class="fe fe-menu whiteColor cursor"></i></strong> {{item.name}}
+                                            <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize whiteColor" [pTooltip]="item.field_tooltip" tooltipPosition="top"></i>
+                                        </th>
+                                        <th class="badge-secondary fontColor fieldFontSize">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td  *ngFor="let item of fillTabularPreData()"></td>
+                                        <td>
+                                            <button class="btn btn-primary fieldFontxSmall mr-1" disabled>View/Edit</button>
+                                            <button class="btn btn-primary fieldFontxSmall" disabled>Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>                      
+				</div>            
+            </div>
+            <div class="card mt-3" *ngIf="gridTypeId == 1"> 
+                <div class="card-header">
+                    <span class="h6">Preview Detail (view and edit modes)</span>     
+                    <span style="float:right;">Drag and drop order of columns to change/set display order.</span>               
+				</div>
+				<div class="card-body">                    
+                    <div cdkDropList cdkDragLockAxis="y" (cdkDropListDropped)="dropdaragVertical($event)">
+                        <div class="row" cdkDrag *ngFor="let item of fillDetailPreData()">
+                            <div class="col-1 viewDetailAlign" cdkDragHandle>
+                                <strong class="mb-0 alignRight"><i class="fe fe-menu cursor"></i></strong>
+                            </div>
+                            <div class="col-11 alighDetail">
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==1 && !item.is_integer_only">
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                        <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize" [pTooltip]="item.field_tooltip" ></i>
+                                    </label>
+                                    <input pInputText type="text" class="form-control">                                             
+                                </div> 
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==1 && item.is_integer_only">    
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                        <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize" [pTooltip]="item.field_tooltip" ></i>
+                                    </label>                                                                                                                                
+                                    <input pInputText type="number" min="0" (keypress)="keyPressNumbers($event)" class="form-control">                                             
+                                </div>
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==2">
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                    <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize" [pTooltip]="item.field_tooltip" ></i>
+                                    </label>
+                                    <textarea pInputTextarea class="form-control textBoxHeight restrictResize"  rows="4" ></textarea>        
+                                </div>
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==3">
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                    <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize" [pTooltip]="item.field_tooltip" ></i>
+                                    </label>
+                                    <p-dropdown [options]="item.field_response" optionLabel="name" optionValue="id" placeholder="Select Response" class="w-100 primeng-form-control input-sm" appendTo="body"></p-dropdown>                                              
+                                </div>   
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==4">
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                    <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize" [pTooltip]="item.field_tooltip" ></i>
+                                    </label>
+                                    <p-multiSelect [options]="item.field_response" [filter]="false" panelStyleClass="filter-on" defaultLabel="Select Response"
+                                        [selectedItemsLabel]="'{0} items selected'"
+                                        optionLabel="name" optionValue="id" appendTo="body">
+                                        <p-header class="mychkall">
+                                            <span>Select All</span>
+                                        </p-header>
+                                    </p-multiSelect>
+                                </div>     
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==5">                            
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                    <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize" [pTooltip]="item.field_tooltip" ></i>
+                                    </label>
+                                    <p-calendar class="w-100 primeng-form-control" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2100" dateFormat="mm/dd/yy"
+                                        [readonlyInput]="true" [showIcon]="true">
+                                    </p-calendar>                            
+                                </div>
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==6">
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                        <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize" [pTooltip]="item.field_tooltip" ></i>
+                                    </label>
+                                    <span class="p-input-icon-right w-100 primeng-form-control">                                
+                                        <input type="text" pInputText class="form-control" />
+                                        <i class="pi pi-search"></i>
+                                    </span>
+                                </div>                         
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==7">                            
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                    <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize" [pTooltip]="item.field_tooltip" ></i>
+                                    </label>
+                                    <input pInputText type="text" class="form-control" disabled/>                             
+                                </div>
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==8">                            
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                    <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize" [pTooltip]="item.field_tooltip" ></i>
+                                    </label>
+                                    <textarea pInputTextarea class="form-control textBoxHeight restrictResize"  rows="4"  disabled></textarea>
+                                </div> 
+                            </div>  
+                        </div>                                                    
+                    </div>
+				</div>            
+            </div>
+            <div class="card mt-3" *ngIf="gridTypeId == 2"> 
+                <div class="card-header">
+                    <span class="h6">Preview Multi-Line</span>                                     
+				</div>
+				<div class="card-body">
+                    <div class="row">
+                        <div class="col align-self-end">                            
+                            <button class="btn btn-primary CreateField mb-1" disabled>Save</button>                            
+                            <button class="btn btn-primary CreateField ml-2 mb-1 mr-1" disabled>Ideal Choices</button>
+                            <button class="btn btn-primary CreateField ml-2 mb-1 mr-1" disabled>Reset</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">                        
+                            <table class="table table-sm  table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="badge-secondary fontColor">Field</th>
+                                        <th class="badge-secondary fontColor">Response</th>
+                                    </tr>
+                                </thead>                                
+                                <tbody cdkDropList
+                                (cdkDropListDropped)="dropdaragVertical($event)">
+                                    <tr cdkDrag cdkDragLockAxis="y" *ngFor="let item of fillDetailPreData()">
+                                        <td cdkDragHandle><i class="fe fe-menu mr-1"></i>{{item.name}}<label class="required" *ngIf="item.is_required">*</label></td>
+                                        <td cdkDragHandle>
+                                            <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==1 && !item.is_integer_only">                                                        
+                                                <input pInputText type="text" class="form-control">                                             
+                                            </div> 
+                                            <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==1 && item.is_integer_only">                                                                                                
+                                                <input pInputText type="number" min="0" (keypress)="keyPressNumbers($event)" class="form-control">                                             
+                                            </div>
+                                            <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==2">                                                
+                                                <textarea pInputTextarea class="form-control textBoxHeight restrictResize"  rows="4" ></textarea>        
+                                            </div>
+                                            <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==3">                                               
+                                                <p-dropdown [options]="item.field_response" optionLabel="name" optionValue="id" placeholder="Select Response" class="w-100 primeng-form-control input-sm" appendTo="body"></p-dropdown>                                              
+                                            </div>   
+                                            <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==4">                                                
+                                                <p-multiSelect [options]="item.field_response" [filter]="false" panelStyleClass="filter-on" defaultLabel="Select Response"
+                                                    [selectedItemsLabel]="'{0} items selected'"
+                                                    optionLabel="name" optionValue="id" appendTo="body">
+                                                    <p-header class="mychkall">
+                                                        <span>Select All</span>
+                                                    </p-header>
+                                                </p-multiSelect>
+                                            </div>     
+                                            <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==5">                                                                           
+                                                <p-calendar class="w-100 primeng-form-control" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2100" dateFormat="mm/dd/yy"
+                                                    [readonlyInput]="true" [showIcon]="true">
+                                                </p-calendar>                            
+                                            </div>
+                                            <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==6">                                                
+                                                <span class="p-input-icon-right w-100 primeng-form-control">                                
+                                                    <input type="text" pInputText class="form-control" />
+                                                    <i class="pi pi-search"></i>
+                                                </span>
+                                            </div>                         
+                                            <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==7">                                                                            
+                                                <input pInputText type="text" class="form-control" disabled/>                             
+                                            </div>
+                                            <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==8">                                                                            
+                                                <textarea pInputTextarea class="form-control textBoxHeight restrictResize"  rows="4"  disabled></textarea>
+                                            </div> 
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>                     
+				</div>            
+            </div>
+        </div>
+    </div>
+</div>

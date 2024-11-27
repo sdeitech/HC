@@ -1,0 +1,184 @@
+<div class="modal-content">
+    <div class="modal-body">
+        <form>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label>Assessment Name</label>
+                        <input pInputText type="text" class="form-control" value="PHQ-9" />
+                    </div>
+                    <div class="form-group">
+                        
+                        <div class="d-flex">
+                            <label for="isScoreable" class="mr-1 mb-0">Is Scoreable</label>
+                            <p-checkbox isScoreable="true" inputId="isScoreable"></p-checkbox>
+                        </div>
+                    </div>
+
+                    <div class="text-right mb-2">
+                        <a href="#" class="btn btn-primary">Add Question</a>
+                    </div>
+
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <a href="#" class="float-right">Edit Question</a>
+                            <span class="h6">In the past two weeks, how often have you had little interest or pleasure in doing things?</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Response Type</label>
+                                <p-dropdown [options]="sampleData" optionLabel="name" class="w-100 primeng-form-control input-sm" appendTo="body"></p-dropdown>
+                               
+                            </div>
+
+                            <label>Specify Response Options</label>
+                            <table class="table table-sm table-lined">
+                                <thead>
+                                    <tr>
+                                        <th>Response</th>
+                                        <th>Score</th>
+                                        <th>Ideal Choice</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Not at all</td>
+                                        <td>0</td>
+                                        <td><i class="fe fe-check"></i></td>
+                                        <td><a href="#">Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Several days</td>
+                                        <td>1</td>
+                                        <td></td>
+                                        <td><a href="#">Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>More than half the days</td>
+                                        <td>2</td>
+                                        <td></td>
+                                        <td><a href="#">Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nearly every day</td>
+                                        <td>3</td>
+                                        <td></td>
+                                        <td><a href="#">Edit</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <a href="#" class="btn btn-secondary btn-sm float-right">Add Response Option</a>
+                        </div>
+                    </div>
+
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <a href="#" class="float-right">Edit Question</a>
+                            <span class="h6">In the past two weeks, how often have you felt down, depressed, or hopeless?</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Response Type</label>
+                                <p-dropdown [options]="sampleData" optionLabel="name" class="w-100 primeng-form-control input-sm" appendTo="body"></p-dropdown>
+                                
+                            </div>
+
+                            <label>Specify Response Options</label>
+                            <table class="table table-sm table-lined">
+                                <thead>
+                                    <tr>
+                                        <th>Response</th>
+                                        <th>Score</th>
+                                        <th>Ideal Choice</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Not at all</td>
+                                        <td>0</td>
+                                        <td><i class="fe fe-check"></i></td>
+                                        <td><a href="#">Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Several days</td>
+                                        <td>1</td>
+                                        <td></td>
+                                        <td><a href="#">Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>More than half the days</td>
+                                        <td>2</td>
+                                        <td></td>
+                                        <td><a href="#">Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nearly every day</td>
+                                        <td>3</td>
+                                        <td></td>
+                                        <td><a href="#">Edit</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <a href="#" class="btn btn-secondary btn-sm float-right">Add Response Option</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header"><span class="h6">Score-Based Coding Recommendations</span></div>
+                        <div class="card-body">
+                            <table class="table table-sm table-lined">
+                                <thead>
+                                    <tr>
+                                        <th>Score Range</th>
+                                        <th>Codes</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>5-9</td>
+                                        <td>FXX.X</td>
+                                        <td><a href="#">Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>10-14</td>
+                                        <td>FXX.X, FXX.X</td>
+                                        <td><a href="#">Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>15-19</td>
+                                        <td>FXX.X, FXX.X</td>
+                                        <td><a href="#">Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>20+</td>
+                                        <td>FXX.X, FXX.X</td>
+                                        <td><a href="#">Edit</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <a href="#" class="btn btn-sm btn-primary">Add Score Range</a>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header"><span class="h6">Visible to Roles</span></div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Project(s)</label>
+                                
+                                <p-multiSelect [options]="sampleMultiselectData" [maxSelectedLabels]="4" [selectedItemsLabel]="'{0} items selected'" defaultLabel="None selected" optionLabel="name" class="w-100 primeng-form-control input-sm text-left" appendTo="body"></p-multiSelect>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<form [formGroup]="addScoreForm" (ngSubmit)="onSubmit(addScoreForm.value)" #form="ngForm" autocomplete="off" novalidate>
+  <div class="modal-content">
+    <div class="modal-body">
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Min Score</label>
+            <input pInputText type="text" (keypress)="keyPressNumbers($event)" class="form-control"
+              formControlName="score_min" maxlength="2" />
+            <div *ngIf="
+                        addScoreForm.get('score_min').hasError('required') &&
+                          form.invalid &&
+                          form.submitted
+                        " class="invalid-feedback d-block">
+              Min Score is required
+            </div>
+
+          </div>
+
+          <div class="form-group">
+            <label>Max Score</label>
+            <input pInputText type="text" (keypress)="keyPressNumbers($event)" class="form-control"
+              formControlName="score_max" maxlength="2" />
+            <div *ngIf="
+                        addScoreForm.get('score_max').hasError('required') &&
+                          form.invalid &&
+                          form.submitted
+                        " class="invalid-feedback d-block">
+              Max Score is required
+            </div>
+            <div class="invalid-feedback d-block" *ngIf="isScoreValidate">
+              Max Score should be greater that min score
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Search ICD-10 Code or Description</label>
+            <p-autoComplete appendTo="body" [suggestions]="filteredIcdCodes" (completeMethod)="getIcdcode($event)"
+              class="w-100 primeng-form-control input-sm" formControlName="description" app
+              placeholder="Search Code or Description (type at least 4 characters)"></p-autoComplete>
+            <div *ngIf="
+                        addScoreForm.get('description').hasError('required') &&
+                          form.invalid &&
+                          form.submitted
+                        " class="invalid-feedback d-block">
+              ICD-10 Code is required
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="submit">
+        <span *ngIf="!loading">
+          Save
+        </span>
+
+        <div class="text-light d-flex justify-content-center align-items-center" *ngIf="loading">
+          <div class="spinner-border  text-light spinner-border-sm" role="status" aria-hidden="true"></div>
+          <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+        </div>
+      </button>
+    </div>
+  </div>
+</form>

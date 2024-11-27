@@ -1,0 +1,186 @@
+<form  [formGroup]="createFieldForm" (ngSubmit)="onSubmit(createFieldForm.value)" #form="ngForm" autocomplete="off"
+novalidate>
+	<div class="modal-content">
+		<div class="modal-body">
+			<div class="form-group">
+				<label>Field Name</label>
+				<input pInputText type="text" class="form-control" [(ngModel)]="fieldName"  formControlName="fieldName">
+				<div *ngIf="createFieldForm.get('fieldName').hasError('required') &&form.invalid &&form.submitted "
+				class="invalid-feedback d-block" >
+					Field Name is required
+				</div>
+			</div>
+			<div class="form-group">
+				<label>Tooltip</label>
+				<input pInputText type="text" class="form-control" [(ngModel)]="fieldTooltip" maxlength="255" formControlName="fieldTooltip">              
+			</div>
+			<div class="form-group" *ngIf="id==0">
+				<label>Field Type</label>
+				<p-dropdown [options]="fieldTypeList" [(ngModel)]="fieldType" optionLabel="name" optionValue="id" placeholder="Select field type"
+				 class="w-100 primeng-form-control input-sm" appendTo="body" formControlName="fieldType" (onChange)="initForm()"></p-dropdown>
+				<div *ngIf="createFieldForm.get('fieldType').hasError('required') &&form.invalid &&form.submitted " class="invalid-feedback d-block" >
+					Field Type is required
+				</div>                
+			</div>                           
+			<div class="form-group">
+				<label>Status</label>
+				<p-dropdown [options]="statusList" optionLabel="name" [(ngModel)]="status"  formControlName="status" (onChange)="checkAndUpdateOrders()"
+				optionValue="id" class="w-100 primeng-form-control input-sm" appendTo="body"></p-dropdown>               
+			</div>
+			<div class="form-group" *ngIf="fieldType == 1">
+				<p-checkbox class="mb-1" [(ngModel)]="chkIsInteger" formControlName="chkIsInteger" inputId="binary"
+					[binary]="true">
+				</p-checkbox ><label for='isInteger' class="ml-1 mb-0">Is Integer</label>
+			</div>
+			<div class="row" *ngIf="chkIsInteger">
+				<div class="col-6">
+					<div class="form-group">
+						<label>Min Expected Integer Value</label>
+						<input pInputText type="number" min="0" class="form-control" [(ngModel)]="minValue" (keypress)="keyPressNumbers($event)"  formControlName="minValue">
+						<div *ngIf="createFieldForm.get('minValue').hasError('required') &&form.invalid &&form.submitted "
+						class="invalid-feedback d-block" >
+							Min value is required
+						</div>
+					</div> 
+				</div>
+				<div class="col-6">
+					<div class="form-group">
+						<label>Max Expected Integer Value</label>
+						<input pInputText type="number" min="0" class="form-control" [(ngModel)]="maxValue" (keypress)="keyPressNumbers($event)" 
+						(blur)="onBlurMaxValue()" formControlName="maxValue">
+						<div *ngIf="createFieldForm.get('maxValue').hasError('required') &&form.invalid &&form.submitted "
+						class="invalid-feedback d-block" >
+							Max value is required
+						</div>
+						<div *ngIf="maxValueError"
+						class="invalid-feedback d-block">Max value should not less than min value</div>
+					</div> 
+				</div>
+			</div>
+			<div class="form-group" *ngIf="fieldType == 6">
+				<label>Choose Look-Up Dataset</label>
+				<p-dropdown [options]="lookupList" optionLabel="name" [(ngModel)]="lookUpDataset"  formControlName="lookUpDataset" 
+				optionValue="id"  placeholder="Select Value" class="w-100 primeng-form-control input-sm" appendTo="body"></p-dropdown> 
+				<div *ngIf="createFieldForm.get('lookUpDataset').hasError('required') &&form.invalid &&form.submitted"
+						class="invalid-feedback d-block" >
+							Please Select Value
+						</div>              
+			</div>
+			<!--Build calculation start-->
+			<div *ngIf="fieldType==7">
+			<div class="form-group">
+				<p><strong>BUILD CALCULATION</strong></p>
+			</div>
+			<div class="row">
+				<div class="col-8">
+					<div class="form-group">
+						<label>Calculation Field 1</label>
+						<p-dropdown placeholder="Select Field" [(ngModel)]="calcField1" [options]="calcField1List" optionLabel="name"  formControlName="calcField1" 
+							optionValue="id" class="w-100 primeng-form-control input-sm" appendTo="body" (onChange)="calcField1Event($event)"></p-dropdown>
+                        <div *ngIf="createFieldForm.get('calcField1').hasError('required') &&form.invalid &&form.submitted " class="invalid-feedback d-block" >
+                            Calculation Field 1 is required
+                        </div>
+					</div> 
+				</div>
+				<div class="col-4">
+					<div class="form-group">
+						<label>Calculation Field 1 Transformation</label>
+						<p-dropdown [options]="calcField1TransList" optionLabel="name" [(ngModel)]="calcField1Trans"  formControlName="calcField1Trans" 
+							optionValue="name" class="w-100 primeng-form-control input-sm" appendTo="body" (onChange)="calculationPreview();"></p-dropdown>
+					</div> 
+				</div>
+			</div>
+			<div class="form-group">
+				<label>Operator Between Calculation Field 1 and Field 2</label>
+				<p-dropdown placeholder="Select Operator" [(ngModel)]="calcBetweenField" [options]="calcOperatorList" optionLabel="name"  formControlName="calcBetweenField" 
+					optionValue="name" class="w-100 primeng-form-control input-sm" appendTo="body" [disabled]="calcField1==undefined" (onChange)="calculationPreview();"></p-dropdown>
+                <div *ngIf="createFieldForm.get('calcBetweenField').hasError('required') &&form.invalid &&form.submitted " class="invalid-feedback d-block" >
+                    Operator Between Calculation Field 1 and Field 2 is required
+                </div>
+			</div>        
+			<div class="row">
+				<div class="col-8">
+					<div class="form-group">
+						<label>Calculation Field 2</label>
+						<p-dropdown placeholder="Select Field" [(ngModel)]="calcField2" [options]="calcField2List" optionLabel="name"  formControlName="calcField2" 
+							optionValue="id" class="w-100 primeng-form-control input-sm" appendTo="body" [disabled]="calcBetweenField==undefined" (onChange)="calcField2Event($event)"></p-dropdown>
+                        <div *ngIf="createFieldForm.get('calcField2').hasError('required') &&form.invalid &&form.submitted " class="invalid-feedback d-block" >
+                            Calculation Field 2 is required
+                        </div>
+					</div> 
+				</div>
+				<div class="col-4">
+					<div class="form-group">
+						<label>Calculation Field 2 Transformation</label>
+						<p-dropdown  [options]="calcField2TransList" [(ngModel)]="calcField2Trans" optionLabel="name"  formControlName="calcField2Trans" 
+							optionValue="name" class="w-100 primeng-form-control input-sm" appendTo="body" [disabled]="calcBetweenField==undefined" (onChange)="calculationPreview();"></p-dropdown>
+					</div> 
+				</div>
+			</div>
+			<div class="form-group">
+				<p-checkbox class="mb-1" [(ngModel)]="chkPostOperator" formControlName="chkPostOperator" inputId="binary"
+					[binary]="true" [disabled]="calcField2==undefined" (onChange)="initRequiredField()">
+				</p-checkbox ><label for='postOperatorChk' class="ml-1 mb-0">Post operator (run another calculation on the above)</label>
+			</div>
+            <div class="form-group" *ngIf="chkPostOperator">
+				<label>Post Operator</label>
+				<p-dropdown placeholder="Select Operator" [(ngModel)]="ddPostOperator" [options]="calcOperatorList" optionLabel="name"  formControlName="ddPostOperator" 
+							optionValue="name" class="w-100 primeng-form-control input-sm" appendTo="body" (onChange)="calculationPreview();"></p-dropdown>            
+                <div *ngIf="createFieldForm.get('ddPostOperator').hasError('required') &&form.invalid &&form.submitted" class="invalid-feedback d-block" >
+                    Post operator is required
+                 </div> 
+			</div>
+			<div class="form-group" *ngIf="chkPostOperator">
+				<label>Post Operator Value</label>
+				<input pInputText type="number" class="form-control" min="0" [(ngModel)]="txtPostOperator" (keypress)="keyPressNumbers($event)" formControlName="txtPostOperator" (blur)="calculationPreview();"> 
+                <div *ngIf="createFieldForm.get('txtPostOperator').hasError('required') &&form.invalid &&form.submitted "
+						class="invalid-feedback d-block" >
+							Post operator value is required
+						</div>           
+			</div>
+			<div class="card mb-3">
+				<div class="card-body card-bg">
+					<p><strong>CALCULATION PREVIEW</strong></p>
+                    <p>{{calcField1Preview}}{{(calcField1Trans == 'Squared' && calcField1Preview != '') ? "&#178;":""}}
+                        {{(betweenOpt !='' && calcField1Preview != '') ? betweenOpt : ''}}
+                        {{calcField2Preview}}{{(calcField2Trans == 'Squared' && calcField2Preview != '') ? "&#178;":""}}
+                        {{chkPostOperator ? postPreview:""}}</p>
+				</div>
+			</div>
+			</div>
+			<!--Build calculation end-->
+			<div class="row">
+				<div class="col-6">
+					<div class="form-group">
+						<p-checkbox class="mb-1" formControlName="chkshowInTabular" inputId="binary"
+							[binary]="true">
+						</p-checkbox ><label for='showInTablubar' class="ml-1 mb-0">Display as column in tabular view</label>
+					</div> 
+				</div>
+				<div class="col-6">
+					<div class="form-group">
+						<p-checkbox class="mb-1" formControlName="chkIsRequired" inputId="binary"
+							[binary]="true">
+						</p-checkbox ><label for='isRequired' class="ml-1 mb-0">Is required?</label>
+					</div> 
+				</div>
+			</div>      
+			<div class="form-group">
+				<p-checkbox class="mb-1" formControlName="chkshowInDetail" inputId="binary"
+					[binary]="true">
+				</p-checkbox ><label for='showInDetail' class="ml-1 mb-0">Display as field in view and edit mode</label>
+			</div>                       
+			<div class="modal-footer">
+				<button class="btn btn-primary" type="submit" >
+					<span *ngIf="!loading">
+					  Save
+					</span>      
+					<div class="text-light d-flex justify-content-center align-items-center" *ngIf="loading">
+					  <div class="spinner-border  text-light spinner-border-sm" role="status" aria-hidden="true"></div>
+					  <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+					</div>
+				  </button>    
+			</div>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,48 @@
+<form [formGroup]="createProblemForm" (ngSubmit)="onSubmit(createProblemForm.value)" #form="ngForm" autocomplete="off"
+    novalidate>
+    <div class="modal-content">
+        <div class="modal-body" style="height: 330px;">
+            <div class="form-group" *ngIf="cp_type !== 'barrier'">
+                <label>Diagnosis Grouping</label>
+                <span class="dropdown-wrap">
+                    <p-dropdown [options]="diag" [filter]="true" (onChange)="getProblems($event)"
+                        placeholder="Select Disease" optionLabel="code" optionValue="id"
+                        class="primeng-form-control input-sm w-100" formControlName="diag_id" appendTo="body">
+                    </p-dropdown>
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label>{{problemlabel}} </label>
+                <div class="w-100">
+                    <!-- <p-autoComplete [suggestions]="filteredProblemPlan" [(ngModel)]="selectedProblem"
+                        (completeMethod)="getlistpgib($event,cp_type)" class="w-100 primeng-form-control input-sm"
+                        formControlName="problem" placeholder="Search {{problemlabel}}" appendTo="body"
+                        panelStyleClass="panel-autocomplete"></p-autoComplete> -->
+                    <p-dropdown [options]="assetslist" [filter]="true" placeholder="Select {{problemlabel}}"
+                        optionLabel="code" optionValue="id" [virtualScroll]="true" [(ngModel)]="selectedProblem"
+                        class="primeng-form-control input-sm w-100" formControlName="problem" appendTo="body">
+                    </p-dropdown>
+                </div>
+                <!-- <input pInputText type="text" class="form-control"  formControlName="problem">-->
+                <div *ngIf="createProblemForm.get('problem').hasError('required') &&form.invalid &&form.submitted "
+                    class="invalid-feedback d-block">
+                    Problem is required
+                </div>
+            </div>
+
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit">
+                <span *ngIf="!loading">
+                    Save
+                </span>
+                <div class="text-light d-flex justify-content-center align-items-center" *ngIf="loading">
+                    <div class="spinner-border  text-light spinner-border-sm" role="status" aria-hidden="true"></div>
+                    <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+                </div>
+            </button>
+        </div>
+    </div>
+</form>

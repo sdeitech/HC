@@ -1,0 +1,73 @@
+<form [formGroup]="addResponseForm" (ngSubmit)="onSubmit(addResponseForm.value)" #form="ngForm" autocomplete="off"
+    novalidate>
+    <div class="modal-content">
+        <div class="modal-body">
+            <div class="question"> <span>{{questionText}}</span></div>
+            <div></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Response</label>
+                        <input pInputText type="text" class="form-control" formControlName="response"
+                            maxlength="500" minlength="1"/>
+                        <div *ngIf="addResponseForm.get('response').hasError('required') && (addResponseForm.get('response').touched || (form.invalid && form.submitted))"
+                            class="invalid-feedback d-block">
+                            Response is required
+                        </div>
+                        <span *ngIf="addResponseForm.get('response').touched && addResponseForm.get('response')['errors'] && addResponseForm.get('response').hasError('minlength') 
+                        && !addResponseForm.get('response').hasError('required')" class="invalid-feedback d-block">
+                        Minimum 3 characters required
+                    </span>
+                    </div>
+                    <div class="form-group">
+                        <label>Generate CPT Based Upon Response Selection (optional)</label>
+                        <span class="p-input-icon-right w-100 primeng-form-control"> 
+                            <p-autoComplete [suggestions]="filteredCPTCodes" [(ngModel)]="cpt_code" formControlName="cpt_code" (completeMethod)="getCPTCode($event)"
+                            class="w-100 primeng-form-control input-sm"  field="name"
+                            placeholder="Search Code or Description (type at least 4 characters)"></p-autoComplete>
+                            <i class="pi pi-search"></i>
+                        </span>
+                        <div *ngIf="showValidCptmsg" class="invalid-feedback d-block">
+                          please fill valid CPT Code
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group" *ngIf="isScroable">
+                        <label>Score</label>
+                        <input pInputText type="text" (keypress)="keyPressNumbers($event)" class="form-control"
+                            formControlName="score" maxlength="10" />
+                            <div *ngIf="addResponseForm.get('score').hasError('required') && (addResponseForm.get('score').touched || (form.invalid && form.submitted))"
+                            class="invalid-feedback d-block">
+                            Score is required
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Ideal Choice</label>
+                        <p-dropdown [options]="idealChoice" placeholder="Select Ideal Choice" optionLabel="name"
+                            class="primeng-form-control input-sm w-100" formControlName="ideal_choice" appendTo="body">
+                        </p-dropdown>
+                        <div *ngIf="addResponseForm.get('ideal_choice').hasError('required') && (addResponseForm.get('ideal_choice').touched || (form.invalid && form.submitted))"
+                            class="invalid-feedback d-block">
+                            Ideal Choice is required
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit" >
+                <span *ngIf="!loading">
+                  Save
+                </span>
+          
+                <div class="text-light d-flex justify-content-center align-items-center" *ngIf="loading">
+                  <div class="spinner-border  text-light spinner-border-sm" role="status" aria-hidden="true"></div>
+                  <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+                </div>
+              </button>
+        </div>
+      
+    </div>
+</form>

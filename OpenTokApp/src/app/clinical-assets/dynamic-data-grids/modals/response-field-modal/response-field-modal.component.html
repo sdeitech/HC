@@ -1,0 +1,69 @@
+<div class="modal-content">
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-1 pr-1"></div>
+            <div class="col-md-5">
+                <label>Response Value</label>
+            </div>
+            <div class="col-md-3">
+                <label>Ideal Choice?</label>
+            </div>
+            <div class="col-md-3">
+                <label>Status</label>
+            </div>
+        </div>
+        <div cdkDropList (cdkDropListDropped)="dropdaragResponse($event)">
+            <div class="row" cdkDrag cdkDragLockAxis="y" *ngFor="let item of fieldResponse">
+                <div class="col-md-1 pr-1" cdkDragHandle>
+                    <strong class="mb-0 pt-2 alignRight"><i class="fe fe-menu"></i></strong>
+                </div>
+                <div class="col-md-5" cdkDragHandle>
+                    <div class="form-group" >                            
+                        <input pInputText type="text" [(ngModel)]="item.name" class="form-control">
+                        <div *ngIf="item.isNotValid" class="invalid-feedback d-block" >
+					        Response value is required
+				        </div>
+                    </div>
+                </div>
+                <div class="col-md-3" cdkDragHandle>
+                    <div class="form-group">
+                        <p-checkbox class="mb-1" [(ngModel)]="item.ideal_choice" inputId="binary" (onChange)="checkForSingleField(item)"
+                            [binary]="true">
+                        </p-checkbox ><label for='idealChoice' class="ml-1 mb-0">Yes</label>
+                    </div>
+                </div>  
+                <div class="col-md-3" cdkDragHandle>
+                    <div class="form-group">
+                        <p-dropdown [options]="statusList" [(ngModel)]="item.status" optionLabel="name" optionValue="id" 
+                        placeholder="Select status"
+                        class="w-100 primeng-form-control input-sm" appendTo="body"></p-dropdown>
+                    </div>
+                </div> 
+            </div>                      
+        </div>        
+        <div class="row">
+            <div class="col">
+                <div class="ml-auto">                    
+                    <button class="btn btn-primary alignRight btn-sm" (click)="addResponse()">
+                        Add Another Response Value      
+                      </button>                    
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="ml-auto">
+                    <button class="btn btn-primary" type="button" (click)="saveResponse()" [disabled]="fieldResponse.length == 0">
+                        <span *ngIf="!loading">
+                          Save
+                        </span>      
+                        <div class="text-light d-flex justify-content-center align-items-center" *ngIf="loading">
+                          <div class="spinner-border  text-light spinner-border-sm" role="status" aria-hidden="true"></div>
+                          <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+                        </div>
+                      </button>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

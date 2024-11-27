@@ -1,0 +1,1047 @@
+
+  <div class="row">
+    <div class="col-md-12">
+      <button class="btn btn-primary" (click)="back()" style="float: right">
+        <i class="fe fe-arrow-left"></i>Back
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+              <form
+          [formGroup]="createGridForm"
+          (ngSubmit)="onSubmit(createGridForm.value)"
+          #form="ngForm"
+          autocomplete="off"
+          novalidate
+        >
+      <div class="row">
+        <div class="col-5">
+          <div class="form-group">
+            <label>Name of Care plane template</label>
+            <input
+              pInputText
+              type="text"
+              class="form-control"
+              formControlName="name"/>
+            <div
+              *ngIf="createGridForm.get('name').hasError('required') &&
+                form.invalid &&
+                form.submitted"
+              class="invalid-feedback d-block">
+              Name is required
+            </div>
+          </div>
+        </div>
+        <div class="col-5">
+          <div class="form-group">
+            <label> Status </label>
+            <p-dropdown
+              [options]="statusList"
+              optionLabel="name"
+              formControlName="status"
+              optionValue="id"
+              class="w-100 primeng-form-control input-sm"
+              appendTo="body"
+            ></p-dropdown>
+            <div
+              *ngIf="
+                createGridForm.get('status').hasError('required') &&
+                form.invalid &&
+                form.submitted "
+              class="invalid-feedback d-block" >
+              Status is required
+            </div>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="form-group">
+          <button class="btn btn-primary button2 mt-4" type="submit"  >
+          <span *ngIf="!isTemplateSaving"> Save Template </span>
+          <div class="text-light d-flex justify-content-center align-items-center"  *ngIf="isTemplateSaving">
+            <div class="spinner-border text-light spinner-border-sm" role="status" aria-hidden="true"></div>
+            <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+          </div>
+        </button>
+        </div>
+        
+        </div>
+      </div>
+  </form>
+
+      <div class="card mb-2">
+        <div class="card-body">
+          <form [formGroup]="updateAssetsForm"
+          (ngSubmit)="updateAssets(updateAssetsForm.value)"
+          #assetform="ngForm">
+          <div class="row">
+            <h5>Change Assets Priority</h5>
+          </div>
+    
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label>Select Asset Type</label>
+                <p-dropdown
+                  [options]="assetstype"
+                  optionLabel="code"
+                  placeholder="Select Asset"
+                  (onChange)="getAssetName($event)"
+                  formControlName="assettype"
+                  optionValue="key"
+                  class="w-100 primeng-form-control input-sm"
+                  appendTo="body"
+                ></p-dropdown>
+                <div
+                  *ngIf="updateAssetsForm.get('assettype').hasError('required') &&
+                  assetform.invalid &&
+                  assetform.submitted"
+                  class="invalid-feedback d-block">
+                  Status is required
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label>Select {{assetName}}</label>
+                <p-dropdown
+                  [options]="assetsArray"
+                  optionLabel="description"
+                  placeholder="Select {{assetName}}"
+                  formControlName="assetId"
+                  optionValue="id"
+                  class="w-100 primeng-form-control input-sm"
+                  appendTo="body"
+                ></p-dropdown>
+                <div
+                  *ngIf="updateAssetsForm.get('assetId').hasError('required') &&
+                  assetform.invalid &&
+                  assetform.submitted"
+                  class="invalid-feedback d-block">
+                  Status is required
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label>Select Priority</label>
+                <p-dropdown
+                  [options]="priorityList"
+                  optionLabel="code_key"
+                  placeholder="Select Priority"
+                  formControlName="priority"
+                  optionValue="id"
+                  class="w-100 primeng-form-control input-sm"
+                  appendTo="body"
+                  (onSelect)="changePriority($event, this.assetslist)"
+                ></p-dropdown>
+                <div
+                  *ngIf="updateAssetsForm.get('priority').hasError('required') &&
+                  assetform.invalid &&
+                  assetform.submitted"
+                  class="invalid-feedback d-block">
+                  Status is required
+                </div>
+              </div>
+            </div>
+            <div class="col" *ngIf="showDueDate">
+              <div class="form-group">
+                <label>Select Due Date</label>
+                <p-calendar 
+                  placeholder="Select DueDate" 
+                  formControlName="dueDate" 
+                  [readonlyInput]="true"
+                  inputId="range" 
+                  class="primeng-form-control input-sm w-100" 
+                  appendTo="body">
+                </p-calendar>
+                <div
+                  *ngIf="updateAssetsForm.get('dueDate').hasError('required') &&
+                  assetform.invalid &&
+                  assetform.submitted"
+                  class="invalid-feedback d-block">
+                  Date is required
+                </div>
+              </div>
+            </div>
+            <div class="col mt-4">
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary">Change Priority</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        </div>
+      </div>
+      <!--Problems-->
+      <!-- <div>
+        <div class="card shadow mb-2 card-mb">
+
+            <div class="card-header">
+                <a (click)="addCarePlanDeatils('Create Problem','problem')"
+                    class="btn btn-secondary btn-sm float-right">
+                    Add New
+                </a>
+                <span class="h6">Problems</span>
+
+            </div>
+            <div class="col-12">
+                <div class="card-body my-n2">
+                    <div class="table-responsive">
+
+                        <p-table #dt dataKey="id" [rows]="pageSize" [value]="careplandetailsProblemslist"
+                            dataKey="id" class="bs-table table-lined" [responsive]="true"
+                            [showCurrentPageReport]="true" [lazy]="true"
+                            [rowsPerPageOptions]="[10, 20, 50, 100, 500, 1000]" [paginator]="false"
+                            (onLazyLoad)="loadLazy($event)" [totalRecords]="totalRecords" [loading]="loading"
+                            class="bs-table" [responsive]="true" selectionMode="multiple">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th width="400">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Diagnosis Grouping</div>
+                                    </th>
+                                    <th width="500">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Problem</div>
+                                    </th>
+
+                                    <th class="text-center">
+                                        <div class="p-d-flex p-jc-between p-ai-center">
+                                            Action
+                                        </div>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-prob>
+                                <tr class="p-selectable-row">
+                                    <td>
+                                        <span class="p-column-title">Diagnosis Grouping</span>
+                                        {{prob.name}}
+                                    </td>
+
+                                    <td>
+                                        <span class="p-column-title">problem</span>
+                                        {{ prob.description }}
+                                    </td>
+
+                                    <td style="text-align: center">
+                                        <a (click)="deleteCarePlanDetails(prob.id)">
+                                            <i class="fe fe-trash fe-12" style="font-size:16px;color:red"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="5">No data found.</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div> -->
+    <!--Goals-->
+    <!-- <div>
+        <div class="card shadow mb-2 card-mb">
+
+            <div class="card-header">
+                <a (click)="addCarePlanDeatils('Create Goals','goal')"
+                    class="btn btn-secondary btn-sm float-right">
+                    Add New
+                </a>
+                <span class="h6">Goals</span>
+
+            </div>
+            <div class="col-12">
+                <div class="card-body my-n2">
+                    <div class="table-responsive">
+
+                        <p-table #dt dataKey="id" [rows]="pageSize" [value]="careplandetailsGoalslist"
+                            dataKey="id" class="bs-table table-lined" [responsive]="true"
+                            [showCurrentPageReport]="true" [lazy]="true"
+                            [rowsPerPageOptions]="[10, 20, 50, 100, 500, 1000]" [paginator]="false"
+                            (onLazyLoad)="loadLazy($event)" [totalRecords]="totalRecords" [loading]="loading"
+                            class="bs-table" [responsive]="true" selectionMode="multiple">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th width="400">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Diagnosis Grouping</div>
+                                    </th>
+                                    <th width="500">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Goal</div>
+                                    </th>
+                                    <th class="text-center">
+                                        <div class="p-d-flex p-jc-between p-ai-center">
+                                            Action
+                                        </div>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-prob>
+                                <tr class="p-selectable-row">
+                                    <td>
+                                        <span class="p-column-title">Diagnosis Grouping</span>
+                                        {{prob.name}}
+                                    </td>
+
+                                    <td>
+                                        <span class="p-column-title">Goal</span>
+                                        {{ prob.description }}
+                                    </td>
+
+                                    <td style="text-align: center">
+                                        <a (click)="deleteCarePlanDetails(prob.id)">
+                                            <i class="fe fe-trash fe-12" style="font-size:16px;color:red"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="5">No data found.</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div> -->
+    <!---Interventions-->
+    <!-- <div>
+        <div class="card shadow mb-2 card-mb">
+            <div class="card-header">
+                <a (click)="addCarePlanDeatils('Create Intervention','intervention')"
+                    class="btn btn-secondary btn-sm float-right">
+                    Add New
+                </a>
+                <span class="h6">Interventions</span>
+
+            </div>
+            <div class="col-12">
+                <div class="card-body my-n2">
+                    <div class="table-responsive">
+
+                        <p-table #dt dataKey="id" [rows]="pageSize" [value]="careplandetailsInterventionslist"
+                            dataKey="id" class="bs-table table-lined" [responsive]="true"
+                            [showCurrentPageReport]="true" [lazy]="true"
+                            [rowsPerPageOptions]="[10, 20, 50, 100, 500, 1000]" [paginator]="false"
+                            (onLazyLoad)="loadLazy($event)" [totalRecords]="totalRecords" [loading]="loading"
+                            class="bs-table" [responsive]="true" selectionMode="multiple">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th width="400">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Diagnosis Grouping</div>
+                                    </th>
+                                    <th width="500">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Intervention</div>
+                                    </th>
+
+                                    <th class="text-center">
+                                        <div class="p-d-flex p-jc-between p-ai-center">
+                                            Action
+                                        </div>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-prob>
+                                <tr class="p-selectable-row">
+                                    <td>
+                                        <span class="p-column-title">Diagnosis Grouping</span>
+                                        {{prob.name}}
+                                    </td>
+
+                                    <td>
+                                        <span class="p-column-title">Intervention</span>
+                                        {{ prob.description }}
+                                    </td>
+                                    <td style="text-align: center">
+                                        <a (click)="deleteCarePlanDetails(prob.id)">
+                                            <i class="fe fe-trash fe-12" style="font-size:16px;color:red"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="5">No data found.</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <!--Barriers-->
+    <!-- <div>
+        <div class="card shadow mb-2 card-mb">
+
+            <div class="card-header">
+                <a (click)="addCarePlanDeatils('Create Barrier','barrier')"
+                    class="btn btn-secondary btn-sm float-right">
+                    Add New
+                </a>
+                <span class="h6">Barriers</span>
+            </div>
+            <div class="col-12">
+                <div class="card-body my-n2">
+                    <div class="table-responsive">
+
+                        <p-table #dt dataKey="id" [rows]="pageSize" [value]="careplandetailsBarrierslist"
+                            dataKey="id" class="bs-table table-lined" [responsive]="true"
+                            [showCurrentPageReport]="true" [lazy]="true"
+                            [rowsPerPageOptions]="[10, 20, 50, 100, 500, 1000]" [paginator]="false"
+                            (onLazyLoad)="loadLazy($event)" [totalRecords]="totalRecords" [loading]="loading"
+                            class="bs-table" [responsive]="true" selectionMode="multiple">
+                            <ng-template pTemplate="header">
+                                <tr>
+
+                                    <th width="500">
+                                        <div class="p-d-flex p-jc-between p-ai-center">Barrier</div>
+                                    </th>
+
+                                    <th class="text-center">
+                                        <div class="p-d-flex p-jc-between p-ai-center">
+                                            Action
+                                        </div>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-prob>
+                                <tr class="p-selectable-row">
+
+                                    <td>
+                                        <span class="p-column-title">Barrier</span>
+                                        {{ prob.description }}
+                                    </td>
+
+                                    <td style="text-align: center">
+                                        <a (click)="deleteCarePlanDetails(prob.id)">
+                                            <i class="fe fe-trash fe-12" style="font-size:16px;color:red"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="5">No data found.</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div> -->
+
+      <!-- Linked and Unlinked Assets section -->
+      <form
+        [formGroup]="createCareBuilderForm"
+        (ngSubmit)="saveAssets(createCareBuilderForm.value)"
+        #form="ngForm"
+        autocomplete="off"
+        novalidate>
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="">
+              <label>Add Assets to Care Plan</label>
+            </div>
+            <div class="row pb-4">
+              <div class="col-lg-12 pl-0" style="display: inline-flex">
+                <div class="col-lg-3 pr-0">
+                  <p-dropdown
+                    [options]="this.diag"
+                    optionLabel="code"
+                    optionValue="id"
+                    placeholder="Select Diagnosis"
+                    class="primeng-form-control input-sm w-100 input-p dropdown1"
+                    (click)="onDiag($event)"
+                    [readonly]="isCareTeamMember"
+                    formControlName="diagid"
+                    styleClass="dropdown1"
+                    appendTo="body"
+                  >
+                  </p-dropdown>
+                </div>
+                <div class="col-lg-3 pr-0">
+                  <p-dropdown
+                    [options]="this.assetstype"
+                    optionLabel="code"
+                    optionValue="key"
+                    placeholder="Select"
+                    class="primeng-form-control input-sm w-100 input-p dropdown1"
+                    [readonly]="isCareTeamMember"
+                    (onChange)="getAssets($event)"
+                    formControlName="assetstypekey"
+                    styleClass="dropdown1"
+                    appendTo="body"
+                  >
+                  </p-dropdown>
+                </div>
+                <div class="col-lg-6 pr-0">
+                  <p-autoComplete
+                    [suggestions]="filteredProblemPlan"
+                    [dropdown]="true"
+                    [(ngModel)]="selectedProblem"
+                    (completeMethod)="getCarePlanPGI($event)"
+                    class="primeng-form-control input-sm w-100"
+                    formControlName="problem"
+                    placeholder="Search"
+                    appendTo="body"
+                    [inputStyle]="{ padding: '0.375rem 0.75rem' }"
+                    (onSelect)="addTolinklist($event, this.assetslist)"
+                    panelStyleClass="panel-autocomplete"
+                  >
+                  </p-autoComplete>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col d-flex">
+                <div class="box-lable pl-2 pt-2">
+                  <div class="box problem-square"></div>
+                  <label class="pl-2 pt-1">Problem</label>
+                </div>
+                <div class="box-lable pl-4 pt-2">
+                  <div class="box goal-square"></div>
+                  <label class="pl-2 pt-1">Goal</label>
+                </div>
+                <div class="box-lable pl-4 pt-2">
+                  <div class="box intervention-square"></div>
+                  <label class="pl-2 pt-1">Intervention</label>
+                </div>
+                <!-- <div class="box-lable pl-4 pt-2">
+                  <div class="box barrier-square"></div>
+                  <label class="pl-2 pt-1">Barrier</label>
+                </div> -->
+              </div>
+            </div>
+            <div class="row">
+              <!--Link Goal and Intervention List with Problem--->
+              <div
+                class="col-md-12"
+                *ngFor="let item_link of linkproblemlistModel"
+              > 
+                <div class="list-group mb-2 shadow mt-4">
+                  <div class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-11 d-flex">
+                        <span class="box problem-square"></span>
+                        <strong class="ml-3">{{
+                          item_link.problem_name
+                        }}</strong>
+                      </div>
+
+                      <div class="col-1 text-right text-center">
+                        <i
+                          class="fe fe-trash fe-12 hand"
+                          pTooltip="Delete Problem"
+                          tooltipPosition="right"
+                          style="font-size: 16px; color: red"
+                          (click)="
+                            deleteLinkproblemModel(item_link.linkproblem_id)
+                          "
+                        ></i>
+                      </div>
+                      <div
+                        class="col-md-12"
+                        *ngFor="
+                          let linkgoalitem of item_link.linkgoalListModel
+                        "
+                        style="padding-left: 50px !important"
+                      >
+                        <div class="list-group mb-2 shadow mt-4">
+                          <div class="list-group-item">
+                            <div class="row align-items-center">
+                              <div class="col-10 d-flex">
+                                <span class="box goal-square"></span>
+                                <label class="ml-3">{{
+                                  linkgoalitem.goal
+                                }}</label>
+                              </div>
+
+                              <div class="col-2 text-right">
+                                <span
+                                  pTooltip="Linked Goal"
+                                  tooltipPosition="right"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 256 256"
+                                    id="IconChangeColor"
+                                    height="20"
+                                    width="20"
+                                    style="
+                                      margin-right: 13px;
+                                      margin-bottom: 6px;
+                                    "
+                                  >
+                                    <rect
+                                      width="256"
+                                      height="256"
+                                      fill="none"
+                                    />
+                                    <path
+                                      d="M88,72V48a8,8,0,0,1,16,0V72a8,8,0,0,1-16,0Zm72,104a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V184A8,8,0,0,0,160,176ZM48,104H72a8,8,0,0,0,0-16H48a8,8,0,0,0,0,16Zm160,48H184a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Zm-86.1,27.3-11.3,11.3a32,32,0,0,1-45.2-45.2l11.3-11.3a8.1,8.1,0,0,0,0-11.4,8,8,0,0,0-11.3,0L54.1,134.1a47.9,47.9,0,1,0,67.8,67.8l11.4-11.3a8,8,0,0,0,0-11.3A8.1,8.1,0,0,0,121.9,179.3ZM190.6,65.4a31.9,31.9,0,0,1,0,45.2l-11.3,11.3a8.1,8.1,0,0,0,0,11.4,8.3,8.3,0,0,0,5.7,2.3,8,8,0,0,0,5.6-2.3l11.3-11.4a47.9,47.9,0,0,0-67.8-67.8L122.7,65.4a8,8,0,0,0,0,11.3,8.1,8.1,0,0,0,11.4,0l11.3-11.3A31.9,31.9,0,0,1,190.6,65.4Z"
+                                      id="mainIconPathAttribute"
+                                      fill="#169bd5"
+                                      stroke-width="0.1"
+                                      stroke="#03a9f4"
+                                      filter="url(#shadow)"
+                                    />
+                                    <filter id="shadow" fill="#000000">
+                                      <feDropShadow
+                                        id="shadowValue"
+                                        stdDeviation=".5"
+                                        dx="0"
+                                        dy="0"
+                                        flood-color="black"
+                                        fill="#000000"
+                                      />
+                                    </filter>
+                                  </svg>
+                                </span>
+
+                                <i
+                                  class="fe fe-trash fe-12 hand"
+                                  pTooltip="Delete Goal"
+                                  tooltipPosition="right"
+                                  (click)="
+                                    deleteLinkgoal(linkgoalitem.goal_id)
+                                  "
+                                  style="font-size: 16px; color: red"
+                                ></i>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="col-md-12"
+                            *ngFor="
+                              let linkinterventionitem of linkgoalitem.linkinterventionListModel
+                            "
+                            style="padding-left: 100px !important"
+                          >
+                            <div class="list-group mb-2 shadow mt-4">
+                              <div class="list-group-item">
+                                <div class="row align-items-center">
+                                  <div class="col-10 d-flex">
+                                    <span
+                                      class="box intervention-square"
+                                      style="display: flex"
+                                    ></span>
+                                    <label
+                                      class="ml-3"
+                                      style="margin-top: 0.1rem"
+                                      >{{
+                                        linkinterventionitem.intervention
+                                      }}</label
+                                    >
+                                  </div>
+
+                                  <div class="col-2 text-right">
+                                    <span
+                                      pTooltip="Linked Intervention"
+                                      tooltipPosition="right"
+                                    >
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 256 256"
+                                        id="IconChangeColor"
+                                        height="20"
+                                        width="20"
+                                        style="
+                                          margin-right: 13px;
+                                          margin-bottom: 6px;
+                                        "
+                                      >
+                                        <rect
+                                          width="256"
+                                          height="256"
+                                          fill="none"
+                                        />
+                                        <path
+                                          d="M88,72V48a8,8,0,0,1,16,0V72a8,8,0,0,1-16,0Zm72,104a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V184A8,8,0,0,0,160,176ZM48,104H72a8,8,0,0,0,0-16H48a8,8,0,0,0,0,16Zm160,48H184a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Zm-86.1,27.3-11.3,11.3a32,32,0,0,1-45.2-45.2l11.3-11.3a8.1,8.1,0,0,0,0-11.4,8,8,0,0,0-11.3,0L54.1,134.1a47.9,47.9,0,1,0,67.8,67.8l11.4-11.3a8,8,0,0,0,0-11.3A8.1,8.1,0,0,0,121.9,179.3ZM190.6,65.4a31.9,31.9,0,0,1,0,45.2l-11.3,11.3a8.1,8.1,0,0,0,0,11.4,8.3,8.3,0,0,0,5.7,2.3,8,8,0,0,0,5.6-2.3l11.3-11.4a47.9,47.9,0,0,0-67.8-67.8L122.7,65.4a8,8,0,0,0,0,11.3,8.1,8.1,0,0,0,11.4,0l11.3-11.3A31.9,31.9,0,0,1,190.6,65.4Z"
+                                          id="mainIconPathAttribute"
+                                          fill="#169bd5"
+                                          stroke-width="0.1"
+                                          stroke="#03a9f4"
+                                          filter="url(#shadow)"
+                                        />
+                                        <filter id="shadow" fill="#000000">
+                                          <feDropShadow
+                                            id="shadowValue"
+                                            stdDeviation=".5"
+                                            dx="0"
+                                            dy="0"
+                                            flood-color="black"
+                                            fill="#000000"
+                                          />
+                                        </filter>
+                                      </svg>
+                                    </span>
+                                    <i
+                                      class="fe fe-trash fe-12 hand"
+                                      pTooltip="Delete Intervention"
+                                      tooltipPosition="right"
+                                      (click)="
+                                        deleteLinklinkintervention(
+                                          linkinterventionitem.intervention_id
+                                        )
+                                      "
+                                      style="font-size: 16px; color: red"
+                                    ></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!---not linked goal and intervention List---->
+              
+              <div class="col-md-12" *ngFor="let goal of goalsList">
+                <div class="list-group mb-2 shadow mt-2">
+                  <div class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-10 d-flex">
+                        <span
+                          class="box goal-square"
+                          style="display: flex"
+                        ></span>
+                        <label class="ml-3" style="margin-top: 0.1rem">
+                          {{ goal.goals }}
+                        </label>
+                      </div>
+                      <div class="col-2 text-right">
+                        <a
+                          ><i
+                            class="fe fe-link fe-rotate-90 fe-12 mr-3"
+                            pTooltip="Link to Problem"
+                            tooltipPosition="right"
+                            (click)="addlink($event, 'goal', goal)"
+                            style="font-size: 18px; color: #169bd5"
+                          ></i
+                        ></a>
+                        <i
+                          class="fe fe-trash hand fe-12"
+                          pTooltip="Delete Goal"
+                          tooltipPosition="right"
+                          (click)="deleteGoalAssets(goal.goal_id, true)"
+                          style="font-size: 18px; color: red"
+                        ></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12" *ngFor="let item of interventionList">
+                <div class="list-group mb-2 shadow mt-2">
+                  <div class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-11 d-flex">
+                        <span
+                          class="box intervention-square"
+                          style="display: flex"
+                        ></span>
+                        <label class="ml-3" style="margin-top: 0.1rem">{{
+                          item.intervention
+                        }}</label>
+                      </div>
+
+                      <div class="col-1 text-right">
+                        <i
+                          class="fe fe-link fe-rotate-90 fe-12 mr-3"
+                          aria-hidden="true"
+                          (click)="addlink($event, 'intervention', item)"
+                          pTooltip="Link to Goal"
+                          tooltipPosition="right"
+                          style="font-size: 18px; color: #169bd5"
+                        ></i>
+                        <i
+                          class="fe fe-trash hand fe-12"
+                          pTooltip="Delete Intervention"
+                          tooltipPosition="right"
+                          (click)="
+                            deleteInterventionAssets(item.intervention_id)
+                          "
+                          style="font-size: 18px; color: red"
+                        ></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer modal-footer-override">
+            <div class="row d-flex">
+              <div class="col-12 mb-2">
+                <strong for=""
+                  >Note : All items will have a default priority of Medium and
+                  status as Open</strong
+                >
+              </div>
+              <div class="">
+                <button
+                  class="btn btn-primary button2"
+                  type="submit"
+                  [disabled]="isDisable"
+                >
+                  <span *ngIf="!loading"> Save Assets </span>
+                  <div
+                    class="text-light d-flex justify-content-center align-items-center"
+                    *ngIf="loading"
+                  >
+                    <div
+                      class="spinner-border text-light spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></div>
+                    <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- Assets List -->
+      <div class="row">
+        <!-- <div class="modal-content"> -->
+          <!--Link Goal and Intervention List with Problem--->
+          <div
+            class="col-md-12" *ngFor="let item_link of cpProblemList">
+            <div class="list-group mb-2 shadow mt-4">
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col-8 d-flex">
+                    <span class="box problem-square"></span>
+                    <span class="ml-3">{{item_link.description}}</span>
+                  </div>
+                  <div class="col-2">
+                    <span *ngIf="item_link.priority == 1">High Priority</span>
+                    <span *ngIf="item_link.priority == 2">Low Priority</span>
+                    <span *ngIf="item_link.priority == 3">Medium Priority</span>
+                  </div>
+
+                  <div class="col-1 text-right">
+                    <i
+                      class="fe fe-trash fe-12 hand"
+                      pTooltip="Delete Problem"
+                      tooltipPosition="right"
+                      style="font-size: 16px; color: red"
+                      (click)="deleteCarePlanDetails(item_link.id)">
+                    </i>
+                  </div>
+                  <div
+                    class="col-md-12"
+                    *ngFor="let linkgoalitem of item_link.goals"
+                    style="padding-left: 50px !important">
+                    <div class="list-group mb-2 shadow mt-4">
+                      <div class="list-group-item">
+                        <div class="row align-items-center">
+                          <div class="col-8 d-flex">
+                            <span class="box goal-square"></span>
+                            <label class="ml-3">{{
+                              linkgoalitem.description
+                            }}</label>
+                          </div>
+                          <div class="col-2">
+                            <span *ngIf="linkgoalitem.priority == 1">High Priority</span>
+                            <span *ngIf="linkgoalitem.priority == 2">Low Priority</span>
+                            <span *ngIf="linkgoalitem.priority == 3">Medium Priority</span>
+                          </div>
+
+                          <div class="col-2 text-right">
+                            <i
+                              class="fe fe-trash fe-12 hand"
+                              pTooltip="Delete Goal"
+                              tooltipPosition="right"
+                              (click)="
+                                deleteCarePlanDetails(linkgoalitem.id)
+                              "
+                              style="font-size: 16px; color: red"
+                            ></i>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="col-md-12"
+                        *ngFor="
+                          let linkinterventionitem of linkgoalitem.interventions
+                        "
+                        style="padding-left: 100px !important"
+                      >
+                        <div class="list-group mb-2 shadow mt-4">
+                          <div class="list-group-item">
+                            <div class="row align-items-center">
+                              <div class="col-8 d-flex">
+                                <span
+                                  class="box intervention-square"
+                                  style="display: flex"
+                                ></span>
+                                <label
+                                  class="ml-3"
+                                  style="margin-top: 0.1rem"
+                                  >{{
+                                    linkinterventionitem.description
+                                  }}</label
+                                >
+                              </div>
+
+                              <div class="col-2">
+                                <span *ngIf="linkinterventionitem.priority == 1">High Priority</span>
+                                <span *ngIf="linkinterventionitem.priority == 2">Low Priority</span>
+                                <span *ngIf="linkinterventionitem.priority == 3">Medium Priority</span>
+                              </div>
+
+                              <div class="col-2 text-right">
+                                <i
+                                  class="fe fe-trash fe-12 hand"
+                                  pTooltip="Delete Intervention"
+                                  tooltipPosition="right"
+                                  (click)="
+                                    deleteCarePlanDetails(
+                                      linkinterventionitem.id
+                                    )
+                                  "
+                                  style="font-size: 16px; color: red"
+                                ></i>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!---not linked goal and intervention List---->
+          
+          <div class="col-md-12" *ngFor="let goal of cpGoalList">
+            <div class="list-group mb-2 shadow mt-2" *ngIf="goal.interventions.length === 0">
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col-8 d-flex">
+                    <span class="box goal-square"
+                      style="display: flex">
+                    </span>
+                    <label class="ml-3" style="margin-top: 0.1rem">
+                      {{ goal.description }}
+                    </label>
+                  </div>
+                  <div class="col-2">
+                    <span *ngIf="goal.priority == 1">High Priority</span>
+                    <span *ngIf="goal.priority == 2">Low Priority</span>
+                    <span *ngIf="goal.priority == 3">Medium Priority</span>
+                  </div>
+                  
+                  <div class="col-2 text-right">
+                    <!-- <a
+                      ><i
+                        class="fe fe-link fe-rotate-90 fe-12 mr-3"
+                        pTooltip="Link to Problem"
+                        tooltipPosition="right"
+                        (click)="addlink($event, 'goal', goal)"
+                        style="font-size: 18px; color: #169bd5"
+                      ></i
+                    ></a> -->
+                    <i
+                      class="fe fe-trash hand fe-12"
+                      pTooltip="Delete Goal"
+                      tooltipPosition="right"
+                      (click)="deleteCarePlanDetails(goal.id)"
+                      style="font-size: 18px; color: red"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12" *ngFor="let item of cpInterventionList">
+            <div class="list-group mb-2 shadow mt-2" *ngIf="item.barriers.length === 0 && !item.parentId">
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col-9 d-flex">
+                    <span
+                      class="box intervention-square"
+                      style="display: flex">
+                    </span>
+                    <label class="ml-3" style="margin-top: 0.1rem">
+                    {{item.description}}</label>
+                  </div>
+                  
+                  <div class="col-2">
+                    <span *ngIf="item.priority == 1">High Priority</span>
+                    <span *ngIf="item.priority == 2">Low Priority</span>
+                    <span *ngIf="item.priority == 3">Medium Priority</span>
+                  </div>
+                  <div class="col-1 text-right">
+                    <!-- <i
+                      class="fe fe-link fe-rotate-90 fe-12 mr-3"
+                      aria-hidden="true"
+                      (click)="addlink($event, 'intervention', item)"
+                      pTooltip="Link to Goal"
+                      tooltipPosition="right"
+                      style="font-size: 18px; color: #169bd5"
+                    ></i> -->
+                    <i
+                      class="fe fe-trash hand fe-12"
+                      pTooltip="Delete Intervention"
+                      tooltipPosition="right"
+                      (click)="deleteCarePlanDetails(item.id)"
+                      style="font-size: 18px; color: red"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- </div> -->
+      </div>
+
+      <!-- <div class="card mt-3 save-panal">
+        <div class="card-body">
+          <div>
+            <button class="btn btn-primary button2" type="submit">
+              <span *ngIf="!loading"> Save Template </span>
+              <div
+                class="text-light d-flex justify-content-center align-items-center"
+                *ngIf="loading"
+              >
+                <div
+                  class="spinner-border text-light spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></div>
+                <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+ 
+<p-confirmDialog
+  [style]="{ width: '450px' }"
+  [baseZIndex]="10000"
+  appendTo="body"
+></p-confirmDialog>

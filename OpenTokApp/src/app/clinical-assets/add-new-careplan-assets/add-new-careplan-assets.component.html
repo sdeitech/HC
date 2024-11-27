@@ -1,0 +1,70 @@
+<form [formGroup]="newRecordForm" #form="ngForm" autocomplete="off" (ngSubmit)="onSubmit(newRecordForm.value)" novalidate>
+    <div class="modal-content large">
+    <div class="modal-body" >
+            <div class="form-group">
+                <label>Status</label>
+                <p-dropdown [options]="sampleData" optionLabel="name" formControlName="status" optionValue="status"
+                    class="w-100 primeng-form-control " appendTo="body"></p-dropdown>
+                <div *ngIf="newRecordForm.get('status').hasError('required') &&form.invalid &&form.submitted "
+                    class="invalid-feedback d-block statusDropdown" >
+                    Name is required
+                </div>
+            </div>
+            <div class="form-group drop" *ngIf="isVisible">
+                <label>Diagnosis Group</label>
+                <span class="dropdown-wrap">
+                    <p-dropdown [options]="masterData" appendTo="body" [filter]="true"
+                        placeholder="Select Disease" optionLabel="code" optionValue="id"
+                        class="primeng-form-control input-sm w-100" formControlName="diag_id"  >
+                    </p-dropdown>
+
+                </span>
+                <div *ngIf="newRecordForm.get('diag_id').hasError('required') && form.invalid && form.submitted"
+                    class="invalid-feedback d-block">Diagnosis is required</div>
+            </div>
+            <div class="form-group">
+                <label>{{code_key | titlecase}} Name</label>
+                <input pInputText type="text" class="form-control" formControlName="name" maxlength="1000"
+                    minlength="3" />
+                <div *ngIf="newRecordForm.get('name').hasError('required') && form.invalid && form.submitted"
+                    class="invalid-feedback d-block">{{code_key | titlecase}} Name is required</div>
+            </div>
+
+            <div class="form-group" *ngIf="code_key == 'diagnosis'">
+                <label>Description</label>
+                <input pInputText type="text" class="form-control" formControlName="description" />
+            </div>
+
+            <div class="form-group">
+                <label>Sort Order</label>
+                <input pInputText type="number" class="form-control" formControlName="sort_order"  />
+            </div>
+            
+            
+            <hr/>
+            <div style="margin-top: 5px;margin-bottom: 5px;">
+               <span style="font-size: 16px;font-weight: 800;"> Asset Translations</span>
+            </div>
+            <div class="form-group">
+                <label>Translation Spanish</label>
+                <input pInputText type="text" class="form-control" formControlName="description_spa" />               
+            </div>
+            <div class="form-group">
+                <label>Translation Chinese</label>
+                <input pInputText type="text" class="form-control" formControlName="description_chi" />               
+            </div>
+            <div class="form-group">
+                <label>Translation Korean</label>
+                <input pInputText type="text" class="form-control" formControlName="description_kor" />               
+            </div>
+            <div class="form-group">
+                <label>Translation Vietnamese</label>
+                <input pInputText type="text" class="form-control" formControlName="description_vie" />               
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" data-dismiss="modal">Save</button>
+        </div>
+    </div>
+</form>

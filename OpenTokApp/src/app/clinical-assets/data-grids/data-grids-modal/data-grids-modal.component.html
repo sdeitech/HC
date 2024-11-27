@@ -1,0 +1,31 @@
+<form [formGroup]="addGuidlineForm" (ngSubmit)="onSubmit(addGuidlineForm.value)" #form="ngForm" autocomplete="off"
+  novalidate>
+  <div class="modal-content">
+    <div class="modal-body">
+      <div class="form-group">
+        <label style="margin-right: 2px;">Role</label>
+        <p-multiSelect [options]="masterRoles" [filter]="true" panelStyleClass="filter-on" defaultLabel="Select Role"
+          formControlName="roles" [(ngModel)]="selectedRole" [selectedItemsLabel]="'{0} items selected'"
+          optionLabel="code" appendTo="body">
+          <p-header class="mychkall">
+            <span>Select All</span>
+          </p-header>
+        </p-multiSelect>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="submit">
+        <span *ngIf="!loading">
+          Save
+        </span>
+
+        <div class="text-light d-flex justify-content-center align-items-center" *ngIf="loading">
+          <div class="spinner-border  text-light spinner-border-sm" role="status" aria-hidden="true"></div>
+          <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+        </div>
+      </button>
+    </div>
+
+
+  </div>
+</form>

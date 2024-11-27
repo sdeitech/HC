@@ -1,0 +1,62 @@
+.CreateField{
+    float: right;
+    font-size: smaller;
+}
+.fieldFontSize{
+    font-size: smaller !important;
+}
+.fieldFontxSmall{
+    font-size: x-small !important;
+}
+.fontColor{
+    color: white;
+}
+p-header.mychkall {
+    position: absolute;
+    left: 40px;
+}
+.restrictResize{
+    resize: none;
+}
+.fieldHeader{
+    font-size: 14px !important;
+    color: #000;
+}
+.padTop{
+    padding-top: 8px;
+}
+.fieldFooterFont{
+    font-size: 12px;
+}
+.fieldFooterBg{
+    background-color: #F5F5F5;
+}
+.alignRight{
+    float: right;
+}
+.viewDetailAlign{
+    padding-left: 0px !important;
+    max-width: 40px !important;
+}
+.required{
+    color: red;
+}
+.alighDetail{
+    flex: 0 0 94.66667%;
+    max-width: 94.66667%;
+}
+.footerEdit{
+    max-width: 15%;
+}
+.footerSuspect{
+    max-width: 22%;
+}
+.footerCptGen{
+    max-width: 23%;
+}
+.whiteColor{
+    color: #ffffff;
+}
+.cursor{
+    cursor: move;
+}

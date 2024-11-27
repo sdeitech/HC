@@ -1,0 +1,35 @@
+<div>
+    <div class="d-flex mb-1 align-items-center">        
+            <div class="flex-grow-1">
+                <strong class="mb-0">Dynamic Data Grids</strong>
+                <p>Data grids are a way of capturing structured or semi-structured data as part of your encounter and longitudinal care delivery workflows.</p>
+            </div>        
+        <div class="ml-auto">
+            <a class="btn btn-primary rounded-pill" (click)="newDynamicGridModal(null)"><i
+                class="fe fe-plus"></i> Create New</a>
+        </div>
+    </div>
+    <div class="container-fluid" *ngIf="loaderStatus">
+        <div class="row">
+            <div class="col-12 text-center">
+                <p-progressSpinner [style]="{ width: '50px', height: '50px' }" strokeWidth="4" fill="#EEEEEE">
+                </p-progressSpinner>
+            </div>
+        </div>
+    </div>
+    <div class="list-group mb-5 shadow mt-3">
+        <div class="list-group-item"  *ngFor="let item of dynamicDataGridData">
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <strong class="mb-0">{{item.name}} <span class="dot dot-lg "
+                        [ngClass]="{'bg-danger': item.status==false, 'bg-success': item.status==true }"></span></strong>
+                    <p class="mb-0"><span class="badge badge-secondary">{{item.type_name}}</span> {{item.description}}</p>
+                </div>
+                <div class="col-4 text-right">
+                    <a (click)="newDynamicGridModal(item)">Edit</a>
+                    <a  (click)="viewDataGrid(item)" style="margin-left: 20px;">Launch Editor</a>
+                </div>
+            </div>
+        </div>    
+    </div>
+</div>

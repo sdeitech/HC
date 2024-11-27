@@ -1,0 +1,111 @@
+<div class="card-header">
+  <button class="btn btn-primary btn-sm float-right ml-2" (click)="addDiagnosis(null)">Add
+    New </button>
+  <span class="h6">Diagnosis Groups</span>
+</div>
+<div class="col-12">
+<div class="card-body my-n2">
+  <div class="table-responsive">
+    <div class="table-header d-flex">
+      <div class="dataTables_length" id="DataTables_Table_0_length">
+        <label>
+          Show
+          <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class=""
+            (change)="selectChangePageSize($event)">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+            <option value="1000">1000</option>
+          </select>
+          entries
+      </label>
+  </div>
+  <div id="DataTables_Table_0_filter" class="dataTables_filter ml-auto">
+    <label class="careplan_search">Search:
+      <input pInputText type="search" (keyup.enter)="searchDiagnosis($event)" (keyup)="searchDiagnosis($event)"
+        (search)="reloadData()" placeholder="Search by diagnosis name" style="width: 198px" />
+    </label>
+  </div>
+</div>
+<div class="container-fluid" *ngIf="loaderStatus">
+  <div class="row">
+      <div class="col-12 text-center">
+          <p-progressSpinner [style]="{ width: '50px', height: '50px' }" strokeWidth="4" fill="#EEEEEE">
+          </p-progressSpinner>
+      </div>
+  </div>
+</div>
+  <p-table  #dt dataKey="id" [rows]="pageSize"  [value]="diagnosisList" dataKey="id"
+      class="bs-table table-lined" [responsive]="true" [showCurrentPageReport]="true" [lazy]="true"
+       [rowsPerPageOptions]="[10, 20, 50, 100, 500, 1000]" [paginator]="true" (onLazyLoad)="loadLazy($event)"
+      [totalRecords]="totalRecords" [loading]="loading" class="bs-table" [responsive]="true" selectionMode="multiple"
+      currentPageReportTemplate="Showing {first} to {last} of {{
+          totalRecords  }} entries">
+      <ng-template pTemplate="header">
+        <tr>
+          <th width="400">
+            <div class="p-d-flex p-jc-between p-ai-center">Name</div>
+          </th>
+          <th width="500">
+            <div class="p-d-flex p-jc-between p-ai-center">Description</div>
+          </th>
+          <th width="500" pSortableColumn="sort_order">
+            <div class="p-d-flex p-jc-between p-ai-center">Sort Order</div>
+            <p-sortIcon field="sort_order"></p-sortIcon>
+          </th>
+          <th width="100">
+
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Status
+            </div>
+          </th>
+
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Action
+            </div>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-diag>
+        <tr class="p-selectable-row">
+          <td>
+            <span class="p-column-title">Name</span>
+            {{ diag.name }}
+          </td>
+          <td class="careplan_diagnosis_problem_custom">
+            <span class="p-column-title">problem</span>
+            {{ diag.description }}
+          </td>
+          <td class="careplan_diagnosis_problem_custom">
+            <span class="p-column-title">sort order</span>
+            {{ diag.sort_order }}
+          </td>
+          <td>
+            <span class="p-column-title"> status</span>
+            <span *ngIf="diag.status == true" class="dot dot-lg bg-success"></span>
+            <span *ngIf="diag.status == false" class="dot dot-lg bg-danger"></span>
+          </td>
+
+          <td>
+            <span class="p-column-title">Action</span>
+            <span>
+              <a class="btn btn-secondary btn-sm" (click)="addDiagnosis(diag)">Edit</a>
+              &nbsp; &nbsp;
+            </span>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">No data found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+</div> 

@@ -1,0 +1,221 @@
+<form [formGroup]="orderForm" (ngSubmit)="onSubmit(orderForm.value)" #form="ngForm">
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-primary" (click)="back()" style="float: right;"><i
+                    class="fe fe-arrow-left"></i>Back</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label>Assessment Name</label>
+                <input pInputText type="text" class="form-control" formControlName="name" />
+                <div *ngIf="orderForm.get('name').hasError('required') && (orderForm.get('name').touched || (form.invalid && form.submitted))"
+                    class="invalid-feedback d-block">
+                    Assessment Name is required
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="d-flex">
+                    <label for="isScoreable" class="mr-1 mb-0">Is Scoreable</label>
+                    <p-checkbox formControlName="is_scoreable" [(ngModel)]="scorable" value="scorable" inputId="binary"
+                        [binary]="true" (onChange)="scroableSelection($event)">
+                    </p-checkbox>
+                </div>
+            </div>
+            <div>
+                <div class="text-right mb-4">
+                    <!-- <a (click)="addContentModal(0,'add')" class="btn btn-primary">Add Content Block</a>&nbsp; -->
+                    <a (click)="openQuestionModal(0,'add')" class="btn btn-primary">Add Question</a>
+                </div>
+                <div class="loader-modal" *ngIf="loading">
+                    <p-progressSpinner [style]="{ width: '50px', height: '50px' }" styleClass="custom-spinner"
+                        strokeWidth="4" fill="#EEEEEE" animationDuration=".5s">
+                    </p-progressSpinner>
+                </div>
+                <div cdkDropList (cdkDropListDropped)="dropdragQuestion($event)" class="card mb-2">
+                    <div class="row " cdkDrag cdkDragLockAxis="y" *ngFor="let item of questionResponse">
+                        <div class="col-12 ">
+                            <!-- <div *ngIf="item.active == true"> -->
+                            <div>
+                                <div cdkDragHandle class="card-header">
+                                    <a (click)="deleteQuestion(item)" style="cursor: pointer;" class="float-right">
+                                        &nbsp;&nbsp;
+                                        <!-- Delete -->
+                                        {{ item.active ? "Active" : "Disabled" }}
+                                    </a>
+                                    <a (click)="openQuestionModal(item,'edit')" style="cursor: pointer;"
+                                        class="float-right">&nbsp;&nbsp;
+                                        Edit Question
+                                    </a>
+
+                                    <a (click)="openConditionalQuestionModal(item)" style="cursor: pointer;"
+                                        class="float-right">
+                                        <i *ngIf="item.displayRules[0]?.display_type == true" class="dot"></i>
+                                        Display Rules
+                                    </a>
+                                    <strong class="mb-0"><i class="fe fe-menu"></i> &nbsp;
+                                        <span class="h6">{{item.question}} </span>
+                                    </strong>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label>Content</label>
+                                        <textarea pInputTextarea  class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="item.content">
+                                        </textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Response Type</label>
+                                        <p-dropdown [options]="masterResponseTypes" [(ngModel)]="item.response_type"
+                                            [ngModelOptions]="{standalone: true}" optionLabel="code"
+                                            (onChange)="onResponseTypeChange($event,item)" placeholder="Select Response"
+                                            class="w-100 primeng-form-control input-sm" appendTo="body">
+                                        </p-dropdown>
+                                        <div *ngIf="!item.response_type" class="invalid-feedback d-block">
+                                            Response is required
+                                        </div>
+                                    </div>
+                                    <div class="form-group" *ngIf="item.response_type">
+                                        <label for='is_required' class="ml-1 mb-0 pr-1">Required</label>
+                                        <p-checkbox class="mb-1" [(ngModel)]="item.is_required" inputId="binary"
+                                            [binary]="true" [ngModelOptions]="{standalone: true}"></p-checkbox>
+                                    </div>
+                                    <div
+                                        *ngIf="item.response_type.code == 'SELECT' || item.response_type.code == 'MULTI'">
+                                        <label>Specify Response Options</label>
+                                        <table class="table table-sm table-lined">
+                                            <thead>
+                                                <tr>
+                                                    <th>Response</th>
+                                                    <th *ngIf="scorable">Score</th>
+                                                    <th>Ideal Choice</th>
+                                                    <th>CPT</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody cdkDropList
+                                                (cdkDropListDropped)="dropdaragResponse($event,item.question_id)">
+                                                <tr cdkDrag cdkDragLockAxis="y" *ngFor="let resp of item.response">
+                                                    <td cdkDragHandle>{{resp.response}}</td>
+                                                    <td cdkDragHandle *ngIf="scorable">{{resp.score}}</td>
+                                                    <td cdkDragHandle><i *ngIf="resp.ideal_choice == true"
+                                                            class="fe fe-check"></i>
+                                                    </td>
+                                                    <td cdkDragHandle>{{resp.cpt_code}}
+                                                    </td>
+                                                    <td cdkDragHandle>
+                                                        <a (click)="openResponseModal(resp,item,'edit')">
+                                                            Edit
+                                                        </a>
+                                                    </td>
+                                                    <td cdkDragHandle>
+                                                        <a (click)="deleteResponse(resp)">
+                                                            <!-- &nbsp;Delete -->
+                                                            {{ resp?.active ? "Active" : "Disabled" }}
+                                                        </a>
+                                                    </td>
+                                                    <!-- Preview -->
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <a (click)="openResponseModal(item,item,'add')"
+                                        *ngIf="item.response_type.code == 'SELECT' || item.response_type.code == 'MULTI' "
+                                        class="btn btn-secondary btn-sm float-right">
+                                        Add Response Option
+                                    </a>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div cdkDropList (cdkDropListDropped)="dragdropContent($event)" class="card mb-2">
+                    <div class="row " cdkDrag cdkDragLockAxis="y" *ngFor="let item of contentResponse">
+                        <div class="col-12 ">
+                            <div>
+                                <div cdkDragHandle class="card-header">
+                                    <a (click)="deleteContent(item)" style="cursor: pointer;" class="float-right">
+                                        &nbsp;&nbsp;
+                                        Delete
+                                    </a>
+                                    <a (click)="addContentModal(item,'edit')" style="cursor: pointer;"
+                                        class="float-right">&nbsp;&nbsp;
+                                        Edit Content
+                                    </a>
+                                    <strong class="mb-0"><i class="fe fe-menu"></i> &nbsp;
+                                        <span class="h6">{{item.content_block}}</span>
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mt-3">
+                <div class="card-header"><span class="h6">Visible to Roles</span></div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Roles(s)</label>
+                        <p-multiSelect [options]="masterRole" [filter]="true" panelStyleClass="filter-on"
+                            [maxSelectedLabels]="4" formControlName="roles" [selectedItemsLabel]="'{0} items selected'"
+                            defaultLabel="None selected" optionLabel="code"
+                            class="w-100 primeng-form-control input-sm text-left" appendTo="body"
+                            [(ngModel)]="selectedRoles"></p-multiSelect>
+                        <div *ngIf="orderForm.get('roles').hasError('required') && form.invalid &&form.submitted "
+                            class="invalid-feedback d-block">
+                            Roles is required
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-2" *ngIf="scorable">
+                <div class="card-header"><span class="h6">Score-Based Coding Recommendations</span></div>
+                <div class="card-body">
+                    <table class="table table-sm table-lined">
+                        <thead>
+                            <tr>
+                                <th>Score Range</th>
+                                <th>Codes</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let obj of scoreList">
+                            <tr *ngIf="obj.active">
+                                <td>{{obj.score_min}}-{{obj.score_max}}</td>
+                                <td>{{obj.description}}</td>
+                                <td><a (click)="addScore(obj)">Edit</a></td>
+                                <td><a (click)="deleteScore(obj)">Delete</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <a (click)="addScore(0)" class="btn btn-sm btn-primary">Add Score Range</a>
+                </div>
+            </div>
+            <div class="card mt-3 save-panal">
+                <div class="card-body">
+                    <div *ngIf="isunsaved">
+                        <p> You have unsaved changes</p>
+                    </div>
+                    <div *ngIf="!loading">
+                        <button class="btn btn-primary button2" type="submit">
+                            <span *ngIf="!saving">Save
+                            </span>
+                            <div class="text-light d-flex justify-content-center align-items-center" *ngIf="saving">
+                                <div class="spinner-border  text-light spinner-border-sm" role="status"
+                                    aria-hidden="true"></div>
+                                <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-confirmDialog [style]="{ width: '450px' }" [baseZIndex]="10000" appendTo="body"></p-confirmDialog>
+</form>

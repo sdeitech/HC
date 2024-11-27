@@ -1,0 +1,178 @@
+<form [formGroup]="createSectionForm" (ngSubmit)="onSubmit(createSectionForm.value)" #form="ngForm" autocomplete="off"
+    novalidate>
+    <div class="modal-content">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Section Name</label>
+                        <input pInputText type="text" class="form-control" formControlName="sectionname"
+                            maxlength="50" />
+                        <div *ngIf="createSectionForm.get('sectionname').hasError('required') && (createSectionForm.get('sectionname').touched || (form.invalid && form.submitted))"
+                            class="invalid-feedback d-block">
+                            Section Name is required
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Assessments in Section</label>
+                        <p-multiSelect [options]="assessmentList" [filter]="true" panelStyleClass="filter-on"
+                            [maxSelectedLabels]="4" formControlName="assessment" [(ngModel)]="selectedAssessment"
+                            [selectedItemsLabel]="'{0} items selected'" defaultLabel="None selected" optionLabel="name"
+                            class="w-100 primeng-form-control input-sm text-left" appendTo="body"></p-multiSelect>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Data Grids in Section</label>
+                        <p-multiSelect [options]="datagridList" [filter]="true" panelStyleClass="filter-on"
+                            [maxSelectedLabels]="4" formControlName="datagrid" [(ngModel)]="selectedDataGrid"
+                            [selectedItemsLabel]="'{0} items selected'" defaultLabel="None selected" optionLabel="name"
+                            class="w-100 primeng-form-control input-sm text-left" appendTo="body"></p-multiSelect>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dynamic Data Grids in Section</label>
+                        <p-multiSelect [options]="dg_datagridList" [filter]="true" panelStyleClass="filter-on"
+                            [maxSelectedLabels]="4" formControlName="dg_datagrid" [(ngModel)]="selectedDgDataGrid"
+                            [selectedItemsLabel]="'{0} items selected'" defaultLabel="None selected" optionLabel="name"
+                            class="w-100 primeng-form-control input-sm text-left" appendTo="body"></p-multiSelect>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header"><span class="h6">Available For</span></div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Project(s)</label>
+                                <p-multiSelect [showToggleAll]="true" [options]="projectDetails_list" [filter]="true"
+                                    panelStyleClass="filter-on" defaultLabel="Select Project"
+                                    [(ngModel)]="selectedProject" [maxSelectedLabels]="0" (onChange)="onProjectChange()"
+                                    [selectedItemsLabel]="'{0} items selected'" filterPlaceHolder="Min 3 char"
+                                    class="w-100 primeng-form-control input-sm" optionLabel="name" optionValue="id"
+                                    (onFilter)="SearchProjectName($event)" [resetFilterOnHide]="true"
+                                    emptyMessage="Begin Typing to Search" formControlName="project" appendTo="body">
+                                </p-multiSelect>
+                                <div *ngIf="showProjectReqError && form.submitted"
+                                class="invalid-feedback d-block">
+                                Project is required
+                            </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Appointment Type</label>
+                                <p-multiSelect [options]="appointmentTypeList" [maxSelectedLabels]="4" [filter]="true"
+                                    panelStyleClass="filter-on" formControlName="appointmenttype"
+                                    [selectedItemsLabel]="'{0} items selected'" defaultLabel="None selected"
+                                    [(ngModel)]="selectedAppointmentType" optionLabel="name"
+                                    class="w-100 primeng-form-control input-sm text-left" appendTo="body">
+                                </p-multiSelect>
+                                <div *ngIf="createSectionForm.get('appointmenttype').hasError('required') && (createSectionForm.get('appointmenttype').touched || (form.invalid && form.submitted))"
+                                    class="invalid-feedback d-block">
+                                    Appointment type is required
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <p-dropdown [options]="statusList" optionLabel="name" optionValue="id"
+                            panelStyleClass="filter-on" [disabled]="!section_id"
+                            class="w-100 primeng-form-control input-sm" appendTo="body" formControlName="status">
+                        </p-dropdown>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>REQUIRE SECTION COMPLETION</label><br>
+                        <label>Always require completing this section?</label>
+                        <div>
+                            <p-inputSwitch [(ngModel)]="require_section" formControlName="require_section">
+                            </p-inputSwitch>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Require section to be completed within encounter when the following conditions are
+                            met:</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <p-checkbox class="mb-1" inputId="binary" [binary]="true" [(ngModel)]="associated_project" formControlName="associated_project"
+                            value="isProjectDisabled" (onChange)="projectSelection($event)">
+                        </p-checkbox><label class="ml-1 mb-0">Project Associate Is:</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <p-multiSelect [showToggleAll]="false" [options]="projectDetails_list" [filter]="true"
+                            [disabled]="!isProjectDisabled" panelStyleClass="filter-on"
+                            [(ngModel)]="selectedAssociatedProject" [maxSelectedLabels]="4"
+                            placeholder="Select one or more projects" [selectedItemsLabel]="'{0} items selected'"
+                            filterPlaceHolder="Min 3 char" class="w-100 primeng-form-control input-sm"
+                            optionLabel="name" optionValue="id" (onFilter)="SearchProjectName($event)"
+                            [resetFilterOnHide]="true" emptyMessage="Begin Typing to Search"
+                            formControlName="associated_project_id" appendTo="body">
+                        </p-multiSelect>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <p-checkbox class="mb-1" inputId="binary" [binary]="true" [(ngModel)]="associated_appointmentType"
+                            formControlName="associated_appointmentType" value="isApptTypeDisabled"
+                            (onChange)="apptTypeSelection($event)">
+                        </p-checkbox><label class="ml-1 mb-0">Appointment Type Is:</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <p-multiSelect [options]="appointmentTypeList" [maxSelectedLabels]="4" [filter]="true"
+                            [disabled]="!isApptTypeDisabled" placeholder="Select one or more appointment types"
+                            panelStyleClass="filter-on" formControlName="associated_appointmentType_id"
+                            [selectedItemsLabel]="'{0} items selected'" defaultLabel="None selected"
+                            [(ngModel)]="selectedAssociatedAppointmentType" optionLabel="name" optionValue="id" 
+                            class="w-100 primeng-form-control input-sm text-left" appendTo="body">
+                        </p-multiSelect>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <p-checkbox class="mb-1" inputId="binary" [binary]="true" [(ngModel)]="associated_appointmentDetails"
+                            formControlName="associated_appointmentDetails" value="isApptDetailDisabled"
+                            (onChange)="apptDetailSelection($event)">
+                        </p-checkbox><label class="ml-1 mb-0">Appointment Detail Is:</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <p-multiSelect [options]="appointmentDetailsList" [maxSelectedLabels]="4" [filter]="true"
+                            [disabled]="!isApptDetailDisabled" placeholder="Select one or more appointment details"
+                            panelStyleClass=" filter-on" formControlName="associated_appointmentDetails_id"
+                            [selectedItemsLabel]="'{0} items selected'"
+                            [(ngModel)]="selectedAssociatedAppointmentDetails" optionLabel="name" optionValue="id" 
+                            class="w-100 primeng-form-control input-sm text-left" appendTo="body">
+                        </p-multiSelect>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" [disabled]="loading">
+                <span *ngIf="!loading"> Save </span>
+                <div class="text-light d-flex justify-content-center align-items-center" *ngIf="loading">
+                    <div class="spinner-border text-light spinner-border-sm" role="status" aria-hidden="true"></div>
+                    <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+                </div>
+            </button>
+        </div>
+    </div>
+</form>

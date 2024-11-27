@@ -1,0 +1,91 @@
+<form  [formGroup]="addGuidlineForm"
+(ngSubmit)="onSubmit(addGuidlineForm.value)"
+#form="ngForm"
+autocomplete="off"
+novalidate>
+<div class="modal-content">
+    <div class="modal-body">
+       
+            <div class="form-group">
+                <label>Template Name</label>
+                <input pInputText type="text" class="form-control"  formControlName="name"  maxlength="100">
+                <div *ngIf="addGuidlineForm.get('name').hasError('required') &&form.invalid &&form.submitted "
+                class="invalid-feedback d-block" >
+             Template Name is required
+          </div>
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <p-dropdown [options]="sampleData" optionLabel="name"  formControlName="status" optionValue="status" class="w-100 primeng-form-control input-sm" appendTo="body"></p-dropdown>
+               
+            </div>
+            <div class="form-group">
+                <label>Template</label>
+              <p-editor formControlName="template" [style]="{ height: '320px' }">
+                <p-header>
+                  <span class="ql-formats">
+                    <select class="ql-header" tabindex="-1">
+                      <option value="1">Heading</option>
+                      <option value="2">Subheading</option>
+                      <option selected>Normal</option>
+                    </select>
+                    <select class="ql-font" tabindex="-1">
+                      <option selected>Sans Serif</option>
+                      <option value="serif">Serif</option>
+                      <option value="monospace">Monospace</option>
+                    </select>
+                  </span>
+                  <span class="ql-formats">
+                    <button class="ql-bold" aria-label="Bold" tabindex="-1"></button>
+                    <button class="ql-italic" aria-label="Italic" tabindex="-1"></button>
+                    <button
+                      class="ql-underline"
+                      aria-label="Underline"
+                      tabindex="-1"
+                    ></button>
+                  </span>
+                
+                  <span class="ql-formats">
+                    <button
+                      class="ql-list"
+                      value="ordered"
+                      aria-label="Ordered List"
+                      tabindex="-1"
+                    ></button>
+                    <button
+                      class="ql-list"
+                      value="bullet"
+                      aria-label="Unordered List"
+                      tabindex="-1"
+                    ></button>
+                    <select class="ql-align" tabindex="-1">
+                      <option selected tabindex="-1"></option>
+                      <option value="center" tabindex="-1"></option>
+                      <option value="right" tabindex="-1"></option>
+                      <option value="justify" tabindex="-1"></option>
+                    </select>
+                  </span>
+                 
+                </p-header>
+              </p-editor>
+              
+               
+               
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button class="btn btn-primary" type="submit" >
+            <span *ngIf="!loading">
+              Save
+            </span>
+      
+            <div class="text-light d-flex justify-content-center align-items-center" *ngIf="loading">
+              <div class="spinner-border  text-light spinner-border-sm" role="status" aria-hidden="true"></div>
+              <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+            </div>
+          </button>
+    </div>
+
+
+</div>
+</form>

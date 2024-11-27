@@ -1,0 +1,229 @@
+<div class="modal-content">
+    <div class="modal-body">
+        <div *ngIf="textWithoutInteger">
+            <div class="row" *ngFor="let item of textIntFalseList">            
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>If entered value of</label>
+                        <input pInputText type="text" [(ngModel)]="item.enter_value" class="form-control">
+                        <div *ngIf="dataNotValid && (item.enter_value == null || item.enter_value == '')" class="invalid-feedback d-block" >
+                            Enter value is required
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Operator</label>
+                        <p-dropdown [options]="operatorList" [(ngModel)]="item.operator" optionLabel="name" optionValue="name" placeholder="Select Operator"
+                        class="w-100 primeng-form-control input-sm" appendTo="body"></p-dropdown>  
+                        <div *ngIf="dataNotValid && (item.operator == null || item.operator == '')" class="invalid-feedback d-block" >
+                            Operator is required
+                        </div>                                
+                    </div>   
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Generate prodecural code</label>
+                        <span class="p-input-icon-right w-100 primeng-form-control"> 
+                            <p-autoComplete [suggestions]="filteredCPTCodes" [(ngModel)]="item.cptcode" (completeMethod)="getCPTCode($event)"
+                            class="w-100 primeng-form-control input-sm"  field="name"
+                            placeholder="Search Code or Description (type at least 4 characters)"></p-autoComplete>
+                            <i class="pi pi-search"></i>
+                        </span>
+                        <div *ngIf="item.icdRequired" class="invalid-feedback d-block">
+                          ICD-10 Code is required
+                        </div>
+                        <div *ngIf="item.showValidIcdmsg" class="invalid-feedback d-block">
+                          please fill valid ICD-10 Code
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>      
+        <div *ngIf="selectType">
+            <div class="row" *ngIf="selectList.length > 0">
+                <div class="col-md-3">
+                    <div class="form-group mb-0">
+                        <label>If response value of</label>
+                    </div>
+                </div>            
+                <div class="col-md-3">
+                    <div class="form-group mb-0">
+                        <label>Operator</label>
+                    </div>
+                </div> 
+                <div class="col-md-6">
+                    <div class="form-group mb-0">
+                        <label>Generate prodecural code</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngFor="let item of selectList">            
+                <div class="col-md-3">
+                    <div class="form-group">                        
+                        <p-dropdown [options]="response_list" [(ngModel)]="item.response_id" optionLabel="name" optionValue="id" 
+                        placeholder="Select Response"
+                        class="w-100 primeng-form-control input-sm" appendTo="body"></p-dropdown> 
+                        <div *ngIf="dataNotValid && (item.response_id == null || item.response_id == '')" class="invalid-feedback d-block" >
+                            Response is required
+                        </div>                                  
+                    </div>   
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">                        
+                        <p-dropdown [options]="operatorList" [(ngModel)]="item.operator" optionLabel="name" optionValue="name" placeholder="Select Operator"
+                        class="w-100 primeng-form-control input-sm" appendTo="body"></p-dropdown>  
+                        <div *ngIf="dataNotValid && (item.operator == null || item.operator == '')" class="invalid-feedback d-block" >
+                            Operator is required
+                        </div>                                
+                    </div>   
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">                        
+                        <span class="p-input-icon-right w-100 primeng-form-control"> 
+                            <p-autoComplete [suggestions]="filteredCPTCodes" [(ngModel)]="item.cptcode" (completeMethod)="getCPTCode($event)"
+                            class="w-100 primeng-form-control input-sm"  field="name"
+                            placeholder="Search Code or Description (type at least 4 characters)"></p-autoComplete>
+                            <i class="pi pi-search"></i>
+                        </span>
+                        <div *ngIf="item.icdRequired" class="invalid-feedback d-block">
+                          ICD-10 Code is required
+                        </div>
+                        <div *ngIf="item.showValidIcdmsg" class="invalid-feedback d-block">
+                          please fill valid ICD-10 Code
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>      
+        <div *ngIf="textWithInteger">
+            <div *ngFor="let item of textIntTrueList; index as i;">
+                <hr *ngIf="i>0" class="borderColor" />
+                <div class="row">            
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>If value entered is</label>
+                            <p-dropdown [options]="operatorTxtList" [(ngModel)]="item.operator" optionLabel="name" optionValue="name" 
+                            placeholder="Select Operator"
+                            class="w-100 primeng-form-control input-sm" appendTo="body"></p-dropdown>
+                            <div *ngIf="dataNotValid && (item.operator == null || item.operator == '')" class="invalid-feedback d-block" >
+                                Operator is required
+                            </div>                                  
+                        </div>   
+                    </div>
+                    <div class="col-md-6" *ngIf="item.operator == 'Equals'">
+                        <div class="form-group">
+                            <label>Qualifier value</label>
+                            <input type="number" pInputText min="0" [(ngModel)]="item.qualifier_value" (keypress)="keyPressNumbers($event)" class="form-control" />
+                            <div *ngIf="dataNotValid && item.qualifier_value == null" class="invalid-feedback d-block" >
+                                Qualifier value is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" *ngIf="item.operator == 'Greater Than'">
+                        <div class="form-group">
+                            <label>Greater Than value</label>
+                            <input type="number" pInputText min="0" [(ngModel)]="item.qualifier_value" (keypress)="keyPressNumbers($event)" class="form-control" />
+                            <div *ngIf="dataNotValid && item.enter_value > item.qualifier_value" class="invalid-feedback d-block" >
+                                Qualifier value is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" *ngIf="item.operator == 'Less Than'">
+                        <div class="form-group">
+                            <label>Less Than value</label>
+                            <input type="number" pInputText min="0" [(ngModel)]="item.qualifier_value" (keypress)="keyPressNumbers($event)" class="form-control" />
+                            <div *ngIf="dataNotValid && item.qualifier_value > item.enter_value" class="invalid-feedback d-block" >
+                                Qualifier value is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" *ngIf="item.operator == 'Greater Than Or Equal To'">
+                        <div class="form-group">
+                            <label>Greater Than Or Equal To value</label>
+                            <input type="number" pInputText min="0" [(ngModel)]="item.qualifier_value" (keypress)="keyPressNumbers($event)" class="form-control" />
+                            <div *ngIf="dataNotValid && item.enter_value >= item.qualifier_value" class="invalid-feedback d-block" >
+                                Qualifier value is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" *ngIf="item.operator == 'Less Than Or Equal To'">
+                        <div class="form-group">
+                            <label>Less Than Or Equal To value</label>
+                            <input type="number" pInputText min="0" [(ngModel)]="item.qualifier_value" (keypress)="keyPressNumbers($event)" class="form-control" />
+                            <div *ngIf="dataNotValid && item.qualifier_value >= item.enter_value" class="invalid-feedback d-block" >
+                                Qualifier value is required
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                <div class="row" *ngIf="item.operator == 'Between'">            
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Between Min</label>
+                            <input type="number" pInputText min="0" [(ngModel)]="item.min_value" class="form-control"  (keypress)="keyPressNumbers($event)"/>
+                            <div *ngIf="dataNotValid && item.min_value == null" class="invalid-feedback d-block" >
+                                Min value is required
+                            </div>                                 
+                        </div>   
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Between Max</label>
+                            <input type="number" pInputText min="0" [(ngModel)]="item.max_value" class="form-control" (keypress)="keyPressNumbers($event)" />
+                            <div *ngIf="dataNotValid && item.max_value == null" class="invalid-feedback d-block" >
+                                Max value is required
+                            </div>
+                            <div *ngIf="dataNotValid && (item.min_value != null && item.max_value != null) && (item.min_value > item.max_value)" class="invalid-feedback d-block" >
+                                Max value Should be greater than min value
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                <div class="row">            
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Generate prodecural code</label>
+                            <span class="p-input-icon-right w-100 primeng-form-control"> 
+                                <p-autoComplete [suggestions]="filteredCPTCodes" [(ngModel)]="item.cptcode" (completeMethod)="getCPTCode($event)"
+                                class="w-100 primeng-form-control input-sm"  field="name"
+                                placeholder="Search Code or Description (type at least 4 characters)"></p-autoComplete>
+                                <i class="pi pi-search"></i>
+                            </span>
+                            <div *ngIf="item.icdRequired" class="invalid-feedback d-block">
+                              CPT Code is required
+                            </div>
+                            <div *ngIf="item.showValidIcdmsg" class="invalid-feedback d-block">
+                              please fill valid CPT Code
+                            </div>
+                        </div> 
+                    </div>                    
+                </div>                                 
+            </div>             
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="ml-auto"> 
+                    <button class="btn btn-primary alignRight btn-sm" (click)="addCPTCode()">
+                        Add Another {{textWithInteger ? "Suspect ":""}}Rule     
+                      </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="ml-auto">
+                    <button class="btn btn-primary" type="button" (click)="onsubmit()">
+                        <span *ngIf="!loading">
+                          Save
+                        </span>      
+                        <div class="text-light d-flex justify-content-center align-items-center" *ngIf="loading">
+                          <div class="spinner-border  text-light spinner-border-sm" role="status" aria-hidden="true"></div>
+                          <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+                        </div>
+                      </button>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

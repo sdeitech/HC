@@ -1,0 +1,112 @@
+<div class="card-header">
+  <button class="btn btn-primary btn-sm float-right ml-2" (click)="addIdentifiedMemberRisk(null)">Add
+    New </button>
+  <span class="h6">Identified Member Risk Groups</span>
+</div>
+<div class="col-12">
+  <div class="card-body my-n2">
+    <div class="table-responsive">
+      <div class="table-header d-flex">
+        <div class="dataTables_length" id="DataTables_Table_0_length">
+          <label>
+            Show
+            <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class=""
+              (change)="selectChangePageSize($event)">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="500">500</option>
+              <option value="1000">1000</option>
+            </select>
+            entries
+          </label>
+        </div>
+        <div id="DataTables_Table_0_filter" class="dataTables_filter ml-auto">
+          <label class="careplan_identified_member_risk">Search:
+            <input pInputText type="search" (keyup.enter)="searchidenifiedmemberrisk($event)"
+              (keyup)="searchidenifiedmemberrisk($event)" (search)="reloadData()" placeholder="Search by Member Risk"
+              style="width: 198px" />
+          </label>
+        </div>
+      </div>
+      <div class="container-fluid" *ngIf="loaderStatus">
+        <div class="row">
+          <div class="col-12 text-center">
+            <p-progressSpinner [style]="{ width: '50px', height: '50px' }" strokeWidth="4" fill="#EEEEEE">
+            </p-progressSpinner>
+          </div>
+        </div>
+      </div>
+      <p-table #dt dataKey="id" [rows]="pageSize" [value]="identifiedMemberRisksList" dataKey="id"
+        class="bs-table table-lined" [responsive]="true" [showCurrentPageReport]="true" [lazy]="true"
+        [rowsPerPageOptions]="[10, 20, 50, 100, 500, 1000]" [paginator]="true" (onLazyLoad)="loadLazy($event)"
+        [totalRecords]="totalRecords" [loading]="loading" class="bs-table" [responsive]="true" selectionMode="multiple"
+        currentPageReportTemplate="Showing {first} to {last} of {{
+            totalRecords  }} entries">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>
+              <div class="p-d-flex p-jc-between p-ai-center">Member Risk Description</div>
+            </th>
+            <th width="300">
+              <div class="p-d-flex p-jc-between p-ai-center">User Created</div>
+            </th>
+            <th width="300" pSortableColumn="sort_order">
+              <div class="p-d-flex p-jc-between p-ai-center">Sort Order</div>
+              <p-sortIcon field="sort_order"></p-sortIcon>
+            </th>
+            <th>
+              <div class="p-d-flex p-jc-between p-ai-center">
+                Status
+              </div>
+            </th>
+
+            <th>
+              <div class="p-d-flex p-jc-between p-ai-center">
+                Action
+              </div>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-memberrisk>
+          <tr class="p-selectable-row">
+            <td>
+              <span class="p-column-title">Member Risk Description</span>
+              {{ memberrisk.description }}
+            </td>
+            <td>
+              <span class="p-column-title">User Created</span>
+              <span *ngIf="memberrisk.user_created == true">Yes</span>
+              <span *ngIf="memberrisk.user_created == false">No</span>
+            </td>
+            <td>
+              <span class="p-column-title">Sort Order</span>
+              {{ memberrisk.sort_order }}
+            </td>
+            <td>
+              <span class="p-column-title"> status</span>
+              <span *ngIf="memberrisk.status == true" class="dot dot-lg bg-success"></span>
+              <span *ngIf="memberrisk.status == false" class="dot dot-lg bg-danger"></span>
+            </td>
+
+            <td>
+              <span class="p-column-title">Action</span>
+              <span>
+                <a class="btn btn-secondary btn-sm" (click)="addIdentifiedMemberRisk(memberrisk)">Edit</a>
+                &nbsp; &nbsp;
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">No data found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>

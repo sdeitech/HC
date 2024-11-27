@@ -1,0 +1,111 @@
+<form [formGroup]="displayForm" #form="ngForm" autocomplete="off" (ngSubmit)="onSubmit()" novalidate>
+    <div class="modal-content">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Display Type</label>
+                        <p-dropdown optionLabel="name" optionValue="Id" [options]="displayList"
+                            placeholder="Select Display Type" (onChange)="onDisplayTypeChange($event)"
+                            class="w-100 primeng-form-control input-sm" formControlName="display_type" appendTo="body">
+                        </p-dropdown>
+                    </div>
+
+                    <div *ngIf="isConditional">
+                        <div formArrayName="displayQuestionArray">
+                            <p-table [value]="displayQuestionArray.controls" class="bs-table table-lined">
+                                <ng-template pTemplate="body" let-controls let-i="rowIndex">
+                                    <tr [formGroupName]="i">
+                                        <br>
+                                        <div class="form-group" *ngIf="i>0">
+                                            <label>Choose Relation</label>
+                                            <p-dropdown optionLabel="relation" optionLabel="name" optionValue="Id"
+                                                [options]="operatorList" formControlName="relation"
+                                                placeholder="Select Relation" appendTo="body"
+                                                class="w-100 primeng-form-control input-sm">
+                                            </p-dropdown>
+                                        </div>
+                                        <br>
+                                        <div class="form-group">
+                                            <label><label>{{i+1}}) </label>Choose Question to Base Display On</label>
+                                            <p-dropdown optionLabel="question" [options]="questionList"
+                                                (onClick)="clickEvent()" (onChange)="onQuestionChange($event, i)"
+                                                formControlName="question" placeholder="Select Question" appendTo="body"
+                                                class="w-100 primeng-form-control input-sm">
+                                            </p-dropdown>
+                                            <div *ngIf="displayQuestionArray.controls[i].get('question').hasError('required')"
+                                                class="invalid-feedback d-block">
+                                                Question is required
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="displayQuestionArray.controls[i].value.question != ''">
+
+                                            <div class="form-group"
+                                                *ngIf="displayQuestionArray.controls[i].value.question.response_type.code == 'SELECT'">
+                                                <label>Show Question When Response Is</label>
+                                                <p-dropdown optionLabel="response" [options]="responseList[i]"
+                                                    formControlName="response" (onChange)="onResponseChange($event, i)"
+                                                    placeholder="Select Response" appendTo="body"
+                                                    class="w-100 primeng-form-control input-sm">
+                                                </p-dropdown>
+                                                <div *ngIf="displayQuestionArray.controls[i].get('response').hasError('required')"
+                                                    class="invalid-feedback d-block">
+                                                    Response is required
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group"
+                                                *ngIf="displayQuestionArray.controls[i].value.question.response_type.code == 'MULTI'">
+                                                <p-multiSelect [options]="responseList[i]" [maxSelectedLabels]="4"
+                                                    formControlName="response"
+                                                    [selectedItemsLabel]="'{0} items selected'"
+                                                    defaultLabel="None selected" optionLabel="response"
+                                                    class="w-100 primeng-form-control input-sm text-left"
+                                                    appendTo="body">
+                                                </p-multiSelect>
+                                                <div *ngIf="displayQuestionArray.controls[i].get('response').hasError('required')"
+                                                    class="invalid-feedback d-block">
+                                                    Response is required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <p-checkbox class="mb-1" formControlName="chk_not_equal" inputId="binary"
+                                                [binary]="true">
+                                            </p-checkbox><label for='isScore' class="ml-1 mb-0"> Is Not Equal</label>
+                                        </div>
+
+                                        <div>
+                                            <button (click)="deleteRow(i)" class="btn btn-danger btn-sm">Delete</button>
+                                        </div>
+                                        <br>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <br>
+
+                            <div class="form-group">
+                                <button type="button" (click)="addRow()" class="btn btn-primary btn-sm">
+                                    Add Question
+                                </button>
+                            </div>
+
+                            <div *ngIf="validateDuplicateQuestion" class="invalid-feedback d-block">
+                                Duplicate Questions Found, Please Choose Unique Questions.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" type="submit">
+                <span>
+                    Save
+                </span>
+            </button>
+        </div>
+    </div>
+</form>

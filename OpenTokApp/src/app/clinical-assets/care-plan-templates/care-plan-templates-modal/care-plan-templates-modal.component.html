@@ -1,0 +1,39 @@
+<form [formGroup]="createGridForm" (ngSubmit)="onSubmit(createGridForm.value)" #form="ngForm" autocomplete="off"
+    novalidate>
+    <div class="modal-content">
+        <div class="modal-body">
+
+            <div class="form-group">
+                <label>Name of Care plane template</label>
+                <input pInputText type="text" class="form-control" formControlName="name">
+                <div *ngIf="createGridForm.get('name').hasError('required') &&form.invalid &&form.submitted "
+                    class="invalid-feedback d-block">
+                    Name is required
+                </div>
+            </div>
+            <div class="form-group">
+                <label>
+                    Status
+                </label>
+                <p-dropdown [options]="statusList" optionLabel="name" formControlName="status" optionValue="id"
+                    class="w-100 primeng-form-control input-sm" appendTo="body"></p-dropdown>
+                <div *ngIf="createGridForm.get('status').hasError('required') &&form.invalid &&form.submitted "
+                    class="invalid-feedback d-block">
+                    Status is required
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit">
+                <span *ngIf="!loading">
+                    Save
+                </span>
+                <div class="text-light d-flex justify-content-center align-items-center" *ngIf="loading">
+                    <div class="spinner-border  text-light spinner-border-sm" role="status" aria-hidden="true"></div>
+                    <span class="text-white ml-2 pt-1 disabled">Saving...</span>
+                </div>
+            </button>
+        </div>
+    </div>
+</form>
